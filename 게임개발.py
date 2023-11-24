@@ -17,6 +17,8 @@ while True:
             dir=0
         nx = x + move[dir][1]
         ny = y + move[dir][0]
+        if nx<0 or nx>m-1 or ny<0 or ny>n-1:
+            continue
         if maps[ny][nx]==0:
             maps[ny][nx]=2
             count+=1
