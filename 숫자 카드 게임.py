@@ -6,4 +6,4 @@ for i in range(n):
     min_value = min(data)
     max_result = max(max_result,min_value)
 
-print(max_result)
+print(max_result);
