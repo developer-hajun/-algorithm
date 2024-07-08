@@ -1,4 +1,4 @@
-n = int(input())
+o = int(input())
 move = input().split()
 x = 1
 y = 1

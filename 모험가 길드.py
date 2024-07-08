@@ -1,4 +1,4 @@
-n = map(int,input())
+o = map(int, input())
 data = list(map(int,input().split()))
 data.sort()
 

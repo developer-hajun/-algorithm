@@ -1,22 +1,22 @@
-n,k = map(int,input().split())
+o,k = map(int, input().split())
 count = 0
-while n!=1:
-    if n%k==0: n /= 5
-    else: n-=1
+while o!=1:
+    if o%k==0: o /= 5
+    else: o-=1
     count+=1
 # O(N)
 print(count)
-n,k = map(int,input().split())
+o,k = map(int, input().split())
 count = 0
-while n>=k:
-    registar = (n/k)*k
-    count += (n-registar)
-    n = registar
-    if n<k:
+while o>=k:
+    registar = (o / k) * k
+    count += (o - registar)
+    o = registar
+    if o<k:
         break
-    n = n/k
+    o = o / k
     count+=1
-count += (n-1)
+count += (o - 1)
 print(int(count))
 
 

@@ -1,8 +1,8 @@
-n = list(map(int,input()))
+o = list(map(int, input()))
 count = 0
-now = n[0]
-n.pop(0)
-for num in n:
+now = o[0]
+o.pop(0)
+for num in o:
     if num == now:
         continue;
     else:

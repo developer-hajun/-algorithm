@@ -1,7 +1,7 @@
-n,m = map(int,input().split())
+o,m = map(int, input().split())
 x,y,dir = map(int,input().split())
 maps=[]
-for i in range(n):
+for i in range(o):
     maps.append(list(map(int,input().split())))
 move = [[1,0],[0,-1],[-1,0],[0,1]]
 maps[y][x]=2
@@ -17,7 +17,7 @@ while True:
             dir=0
         nx = x + move[dir][1]
         ny = y + move[dir][0]
-        if nx<0 or nx>m-1 or ny<0 or ny>n-1:
+        if nx<0 or nx>m-1 or ny<0 or ny>o-1:
             continue
         if maps[ny][nx]==0:
             maps[ny][nx]=2
