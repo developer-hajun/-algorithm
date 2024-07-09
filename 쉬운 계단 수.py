@@ -1,4 +1,4 @@
-import math
+
 n=int(input())
 line= []
 for i in range(n+1):
