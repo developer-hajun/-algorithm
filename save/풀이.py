@@ -1,20 +1,18 @@
-a = int(input())
+from collections import deque
 
-value = list(map(int,input().split()))
-answer = [1]*a
-save = []
-for i in range(a):
-    line=[value[i]]
-    save.append(line)
-mat =[]
-count = 0
-for i in range(1,a):
-    for j in range(0,i):
-        if value[i]>value[j]:
-            if answer[i] < answer[j] + 1:
-                answer[i]=answer[j] + 1
-                save[i] = save[j]+[value[i]]
-k = save[answer.index(max(answer))]
-print(max(answer))
-for i in k:
-    print(i,end=' ')
+n = int(input())
+line=[[9999,-2]]*(n+1)
+queue=deque()
+queue.append([n,1,1])  # n 개수, 1 상근 -1 창영 , 카운트
+while queue:
+    now,who,count=queue.popleft()
+    if now-3>=0 and line[now-3][0]>count:
+        line[now-3]=[count,who]
+        queue.append([now-3,-who,count+1])
+    if now - 1 >= 0 and line[now - 1][0] > count:
+        line[now - 1] = [count, who]
+        queue.append([now - 1, -who, count + 1])
+if line[0][1]==1:
+    print("SK")
+else:
+    print("CY")
