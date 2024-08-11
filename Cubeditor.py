@@ -1,16 +1,19 @@
-n, m = map(int, input().split())
-a = list(input())
+from collections import deque
 
-for i in range(n):
-    a[i] = int(a[i])
-answer = []
+dic = {'Y':2,'F':3,'O':4}
+man = set()
+n,game = input().split()
+n = int(n)
 count = 0
-for i in a:
-    while len(answer)>0 and count<m and answer[-1]<i:
-        answer.pop()
+human = 1
+for i in range(n):
+    now= input()
+    if now in man:
+        continue
+    man.add(now)
+    human+=1
+    if human%dic[game]==0:
+        human=1
         count+=1
-    answer.append(i)
+print(count)
 
-while len(answer)>(n-m):
-    answer.pop()
-print(''.join(map(str, answer)))
