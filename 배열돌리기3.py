@@ -55,12 +55,7 @@ def rotate6():
 
 n, m, r = list(map(int, input().split()))
 matrix = [list(map(int, input().split())) for i in range(n)]
-#rotate1()
-#rotate2()
-#rotate3()
-#rotate4()
-#rotate5()
-#rotate6()
+
 line = list(map(int, input().split()))
 for case in line:
     if case==1:
