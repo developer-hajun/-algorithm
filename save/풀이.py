@@ -1,49 +1,60 @@
+import copy
+import heapq
+import sys
 from collections import deque
-from math import ceil, log
+from itertools import permutations
 
 
-def segment(left,right,i):
-    if left==right:
-        segment_tree[i]=[nums[left],left]
-        return [segment_tree[i][0],segment_tree[i][1]]
-    mid = (left +right)//2
-    value , which =segment(left,mid,i*2)
-    value2 , which2 = segment(mid+1,right,i*2+1)
-    if value<value2:
-        segment_tree[i]=[value,which]
-    elif value>value2:
-        segment_tree[i]=[value2,which2]
-    else:
-        segment_tree[i]=[value2,min(which,which2)]
-    return [segment_tree[i][0],segment_tree[i][1]]
+#최단 거리 찾기
+def bfs(start):
+    queue = deque()
+    re = [[0]*a for _ in range(b)]
+    queue.append([start[0],start[1]])
+    re[start[0]][start[1]]=1
+    while queue:
+        y,x=queue.popleft()
+        for next_y,next_x in [y-1,x],[y+1,x],[y,x+1],[y,x-1]:
+            if 0<=next_y<b and 0<=next_x<a and re[next_y][next_x]==0 and matrix[next_y][next_x]!='x':
+                re[next_y][next_x]=re[y][x]+1
+                queue.append([next_y,next_x])
+    return re
 
-def segment_update(start,end,node,idx,now_val):
-    if start>idx or idx>end:
-        return
-    if start==end:
-        segment_tree[node]=[now_val,start]
-        return segment_tree[node]
-    mid = (start+end)//2
-    segment_update(start,mid,node*2,idx,now_val)
-    segment_update(mid+1,end, node * 2+1, idx, now_val)
-    if segment_tree[node*2][0]<=segment_tree[node*2+1][0]:
-        segment_tree[node]=[segment_tree[node*2][0],segment_tree[node*2][1]]
-    else:
-        segment_tree[node] = [segment_tree[node * 2+1][0], segment_tree[node * 2+1][1]]
+while True:
+    a,b = map(int,input().split())
+    if a==0 and b==0:
+        break
+    now = [] #시작 위치
+    dirty = []
+    go_dirty=[]
+    matrix=[] #맵
+    for i in range(b):
+        line = list(input().strip())
+        matrix.append(line)
+        for j in range(a):
+            if line[j]=='o':
+                now=[i,j]
+            if line[j]=='*':
+                dirty.append([i,j])
+   #첫번쨰 방문 까지의 시간
+    dist = bfs(now)
+    for y,x in dirty:
+        go_dirty.append(dist[y][x]-1)
+    if go_dirty.count(-1):
+        print(-1)
+        continue
 
-def find_min_value(left,right,i):
-    global mins
+    next_find = [[0]*len(dirty)for _ in range(len(dirty))]
+    for i in range(len(dirty)):
+        dist = bfs(dirty[i])
+        for j in range(i+1,len(dirty)):
+            next_find[i][j] = dist[dirty[j][0]][dirty[j][1]]-1
+            next_find[j][i] = next_find[i][j]
 
-
-n = int(input())
-
-nums = list(map(int,input().split()))
-segment_tree = [0] + [0] * (pow(2, ceil(log(len(nums), 2)+1) + 1) - 1)
-segment(0,n-1,1)
-m = int(input())
-for i in range(m):
-    now = list(map(int,input().split()))
-    if now[0]==2:
-        print(segment_tree[1][1]+1)
-    else:
-        segment_update(0,n-1,1,now[1]-1,now[2])
+    answer = 99999
+    how = [i for i in range(0, len(dirty))]
+    for i in permutations(how, len(dirty)):
+        value = go_dirty[i[0]]
+        for j in range(1, len(i)):
+            value += next_find[i[j - 1]][i[j]]
+        answer = min(answer, value)
+    print(answer)
