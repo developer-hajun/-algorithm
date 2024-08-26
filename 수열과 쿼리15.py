@@ -31,19 +31,9 @@ def segment_update(start,end,node,idx,now_val):
     else:
         segment_tree[node] = [segment_tree[node * 2+1][0], segment_tree[node * 2+1][1]]
 
-def find_min_value(left,right,i):
-    global mins
-
 
 n = int(input())
 
 nums = list(map(int,input().split()))
 segment_tree = [0] + [0] * (pow(2, ceil(log(len(nums), 2)+1) + 1) - 1)
 segment(0,n-1,1)
-m = int(input())
-for i in range(m):
-    now = list(map(int,input().split()))
-    if now[0]==2:
-        print(segment_tree[1][1]+1)
-    else:
-        segment_update(0,n-1,1,now[1]-1,now[2])
