@@ -1,42 +1,45 @@
-import sys
+from collections import deque
+from math import ceil, log
 
 
-def marge_sort(start,mid,end):
-    if (end-start)>(n/h):
-        return
-    print(start,end)
-    i,j,k = start,mid+1,start
-    while i<=mid and j<=end:
-        if value[i]<=value[j]:
-            answer[k] = value[i]
-            k+=1
-            i+=1
-            continue
-        answer[k]=value[j]
-        k+=1
-        j+=1
-    if(i>mid):
-        for l in range(j,end+1):
-            answer[k]=value[l]
-            k+=1
-    else:
-        for l in range(i,mid+1):
-            answer[k]=value[l]
-            k+=1
-    for l in range(start,end+1):
-        value[l]=answer[l]
-def chicken(start,end):
-    if start==end:
-        return
+def segment(left,right,i):
+    if left==right:
+        segment_tree[i]=nums[left]
+        return segment_tree[i]%1000000007
+    mid = (left +right)//2
+    segment_tree[i]=(segment(left,mid,i*2)*segment(mid+1,right,i*2+1))%1000000007
+    return segment_tree[i]
+def segment_gob(start,end,idx,left,right):
+    if left>end or right<start:
+        return 1
+    if left<=start and right>=end:
+        return segment_tree[idx]
     mid = (start+end)//2
-    chicken(start,mid)
-    chicken(mid+1,end)
-    marge_sort(start,mid,end)
+    return segment_gob(start,mid,idx*2,left,right)*segment_gob(mid+1,end,idx*2+1,left,right)
 
-n = int(input())
-value = list(map(int,input().split()))
-answer=[0]*n
-h = int(input())
-chicken(0,n-1)
-for _ in answer:
-    print(_,end=' ')
+def segment_update(start,end,node,idx,e_val,now_val):
+    if start>idx or idx>end:
+        return segment_tree[node]
+
+    segment_tree[node] = segment_tree[node]/e_val*now_val
+    if start!=end:
+        mid = (start+end)//2
+        segment_update(start,mid,node*2,idx,e_val,now_val)
+        segment_update(mid+1,end,node*2+1,idx,e_val,now_val)
+
+n,m,k = map(int,input().split())
+
+nums = [int(input()) for _ in range(n)]
+segment_tree = [0] + [0] * (pow(2, ceil(log(len(nums), 2)+1) + 1) - 1)
+segment(0,n-1,1)
+for _ in range(m+k):
+    command,st,en = map(int,input().split())
+    if command==1:
+        now = nums[st-1]
+        segment_update(0,n-1,1,st-1,now,en)
+        print(segment_tree)
+    if command==2:
+        print((int(segment_gob(0,n-1,1,st-1,en))))
+
+
+
