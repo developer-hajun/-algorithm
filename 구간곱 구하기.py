@@ -24,12 +24,9 @@ def segment_update(start,end,node,idx,now_val,before_value):
 def segment_sum(start,end,idx,left,right):
     if left > end or right < start:
         return 1
-        # 범위 안에 있는 경우
     if left <= start and right >= end:
         return segment_tree[idx]
-        # 그렇지 않다면 두 부분으로 나누어 합을 구하기
     mid = (start + end) // 2
-    # start와 end가 변하면서 구간 합인 부분을 더해준다고 생각하면 된다.
     return segment_sum(start, mid, idx * 2, left, right) * segment_sum(mid + 1, end, idx * 2 + 1, left, right)
 n,m,k = map(int,input().split())
 
