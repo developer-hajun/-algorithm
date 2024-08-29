@@ -1,32 +1,40 @@
-import math
+n,m = map(int,input().split())
+arr = [list(map(int,input().split())) for _ in range(n)]
 
-def find(a,b,n,h):
-    if h==0:
-        return matrix[a][b]
-    q=find(a,b,n//2,h-1)
-    w=find(a,b+n//2,n//2,h-1)
-    e=find(a+n//2,b,n//2,h-1)
-    r=find(a+n//2,b+n//2,n//2,h-1)
-    if [q,w,e,r]==[1,1,1,1]:
-        return 1
-    elif [q,w,e,r]==[0,0,0,0]:
-        return 0
-    else:
-        for _ in [q,w,e,r]:
-            if _==1:
-                dic["blue"]+=1
-            elif _==0:
-                dic["white"]+=1
-        return 2
+def check(line):
+    visit = [False]*n
+    for i in range(0,n-1):
+        if line[i]==line[i+1]:
+            continue
+        elif abs(line[i]-line[i+1])>1:
+            return False
+        elif line[i]>line[i+1]:
+            now = line[i+1]
+            for j in range(i+1,i+m+1):
+                if j>=n:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j]=True
+        else:
+            now = line[i]
+            for j in range(i,i-m,-1):
+                if j<0:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j] = True
+    return True
 
-
-n= int(input())
-matrix = [list(map(int,input().split())) for _ in range(n)]
-dic = {"blue":0,"white":0}
-re = find(0,0,n,math.log2(n))
-if re==1:
-    dic["blue"] += 1
-elif re==0:
-    dic["white"]+=1
-print(dic["white"])
-print(dic["blue"])
+answer=0
+for i in range(n):
+    if check(arr[i]):
+        answer+=1
+for i in range(n):
+    if check([arr[a][i] for a in range(n)]):
+        answer+=1
+print(answer)
