@@ -1,51 +1,40 @@
-from collections import deque
+n,m = map(int,input().split())
+arr = [list(map(int,input().split())) for _ in range(n)]
 
-queue = [deque(map(int, input().strip())) for _ in range(4)]
-m = int(input())
-for i in range(m):
-    a, b = map(int, input().split())
-    a -= 1
-    left = queue[a][6]
-    right = queue[a][2]
-    queue2 = deque()
-    queue2.append([a-1,-b,left,2])
-    queue2.append([a+1,-b,right,6])
-    visit=[0]*4
-    visit[a]=1
-    # for q, w, e, r in [a - 1, -b, left, 2], [a + 1, -b, right, 6]:
-    #     if q == -1 or q == 4:
-    #         continue
-    #     elif queue[q][r] == e:
-    #         continue
-    #     if w == -1:
-    #         queue[q].append(queue[q].popleft())
-    #     else:
-    #         queue[q].appendleft(queue[q].pop())
-    while queue2:
-        q,w,e,r = queue2.popleft()
-        if q == -1 or q == 4:
+def check(line):
+    visit = [False]*n
+    for i in range(0,n-1):
+        if line[i]==line[i+1]:
             continue
-        elif queue[q][r]==e:
-            continue
-        elif visit[q]:
-            continue
-        visit[q]=1
-        queue2.append([q + 1, -w, queue[q][2], 6])
-        queue2.append([q - 1,-w,queue[q][6],2])
-        if w==-1:
-            queue[q].append(queue[q].popleft())
+        elif abs(line[i]-line[i+1])>1:
+            return False
+        elif line[i]>line[i+1]:
+            now = line[i+1]
+            for j in range(i+1,i+m+1):
+                if j>=n:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j]=True
         else:
-            queue[q].appendleft(queue[q].pop())
-    if b==-1:
-        queue[a].append(queue[a].popleft())
-    else:
-        queue[a].appendleft(queue[a].pop())
+            now = line[i]
+            for j in range(i,i-m,-1):
+                if j<0:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j] = True
+    return True
 
-answer =0
-now = 1
-
-for _ in queue:
-    if _[0]==1:
-        answer += now
-    now*=2
+answer=0
+for i in range(n):
+    if check(arr[i]):
+        answer+=1
+for i in range(n):
+    if check([arr[a][i] for a in range(n)]):
+        answer+=1
 print(answer)
