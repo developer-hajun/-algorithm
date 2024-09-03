@@ -1,105 +1,78 @@
 import copy
 
-m, s = map(int, input().split())
-matrix = []
-shark = []
-move_fish = [[0, -1], [-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1]]
-move_shark = [[-1, 0], [0, -1], [1, 0], [0, 1]]
-small = [[0] * 4 for i in range(4)]
-
-
-def init():
-    global shark
-    for i in range(4):
-        line = []
-        for j in range(4):
-            line2 = []
-            line.append(line2)
-        matrix.append(line)
-    for _ in range(m):
-        a, b, c = map(int, input().split())
-        matrix[a - 1][b - 1].append(c - 1)
-    shark = list(map(int, input().split()))
-    shark[0]-=1
-    shark[1]-=1
-
-def fish_move():
-    n_matrix = []
-    for y in range(4):
-        line = []
-        for x in range(4):
-            line2 = []
-            line.append(line2)
-        n_matrix.append(line)
-
-    for y in range(4):
-        for x in range(4):
-            if not matrix[y][x]:
-                continue
-            while matrix[y][x]:
-                now = matrix[y][x].pop()
-                check = True
-                for i in range(8):
-                    ny = y + move_fish[now][0]
-                    nx = x + move_fish[now][1]
-                    if 0 <= ny < 4 and 0 <= nx < 4 and small[ny][nx] == 0 and [ny, nx] != shark:
-                        check = False
-                        n_matrix[ny][nx].append(now)
-                        break
-                    now -= 1
-                    if now == -1:
-                        now = 7
-                if check:
-                    n_matrix[y][x].append(now)
-    return n_matrix
-
-
-def shark_move(y, x, fish_value, count, visit):
-    global max_eat, shark, eat
-    if count == 3:
-        if fish_value > max_eat:
-            max_eat = fish_value
-            shark = [y, x]
-            eat = copy.deepcopy(visit)
+moves = [
+    [],
+    [(0,1),(1,0),(-1,0),(0,-1)],
+    [(0,1,0,-1),(1,0,-1,0)],
+    [(1,0,0,1),(1,0,0,-1),(-1,0,0,1),(-1,0,0,-1)],
+    [(1,0,-1,0,0,1),(1,0,-1,0,0,-1),(0,1,0,-1,1,0),(0,1,0,-1,-1,0)],
+    [(1,0,-1,0,0,1,0,-1)]
+]
+def move(temp,y,x,move_x,move_y):
+    count = 0
+    value = 0
+    while True:
+        ny = y+(value*move_y)
+        nx = x+(value*move_x)
+        if 0<=nx<m and 0<=ny<n:
+            if temp[ny][nx]==6:
+                break
+            temp[ny][nx]=-1
+        else:
+            break
+        value+=1
+def solve(board,now):
+    global answer
+    if now==len(cam):
+        value = 0
+        for _ in board:
+            value+=_.count(0)
+        answer = min(answer,value)
         return
-    for i in range(4):
-        ny = y + move_shark[i][0]
-        nx = x + move_shark[i][1]
-        if 0 <= ny < 4 and 0 <= nx < 4:
-            if [ny, nx] not in visit:
-                visit.append([ny,nx])
-                shark_move(ny, nx, fish_value + len(matrix[ny][nx]), count + 1, visit)
-                visit.pop()
-            else:
-                shark_move(ny, nx, fish_value, count + 1, visit)
+    y,x,cam_value = cam[now]
+    if cam_value==1:
+        for move_y, move_x in moves[cam_value]:
+            temp = copy.deepcopy(board)
+            move(temp,y,x,move_y,move_x)
+            solve(temp,now+1)
+    elif cam_value==2 or cam_value==3:
+        for move_y, move_x,move_y1, move_x1 in moves[cam_value]:
+            temp = copy.deepcopy(board)
+            move(temp, y, x, move_y, move_x)
+            move(temp, y, x, move_y1, move_x1)
+            solve(temp,now+1)
+    elif cam_value==4:
+        for move_y, move_x,move_y1, move_x1,move_y2,move_x2 in moves[cam_value]:
+            temp = copy.deepcopy(board)
+            move(temp, y, x, move_y, move_x)
+            move(temp, y, x, move_y1, move_x1)
+            move(temp, y, x, move_y2, move_x2)
+            solve(temp,now+1)
+    elif cam_value==5:
+        for move_y, move_x,move_y1, move_x1,move_y2,move_x2,move_y3,move_x3 in moves[cam_value]:
+            temp = copy.deepcopy(board)
+            move(temp, y, x, move_y, move_x)
+            move(temp, y, x, move_y1, move_x1)
+            move(temp, y, x, move_y2, move_x2)
+            move(temp, y, x, move_y3, move_x3)
+            solve(temp,now+1)
 
-def shark_eat():
-    for y,x in eat:
-        if matrix[y][x]:
-            small[y][x]=3
-            matrix[y][x]=[]
-def small_remove():
-    for y in range(4):
-        for x in range(4):
-            if small[y][x]:
-                small[y][x]-=1
 
 
 
-init()
-
-for _ in range(s):
-    copy_fish = copy.deepcopy(matrix)
-    matrix = fish_move()
-    max_eat, eat = -1, []
-    shark_move(shark[0],shark[1],0,0,[])
-    shark_eat()
-    small_remove()
-    for i in range(4):
-        for j in range(4):
-            matrix[i][j] += copy_fish[i][j]
-answer = 0
-for i in range(4):
-    for j in range(4):
-        answer += len(matrix[i][j])
+n,m = map(int,input().split())
+matrix = []
+visit=[[0]*m for _ in range(n)]
+cam = []
+wall=0
+for i in range(n):
+    line = list(map(int,input().split()))
+    matrix.append(line)
+    for j in range(m):
+        if line[j]==6:
+            wall+=1
+        elif line[j]!=0:
+            cam.append([i,j,line[j]])
+answer = 64
+solve(matrix,0)
 print(answer)
