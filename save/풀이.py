@@ -1,103 +1,48 @@
-n = int(input())
+import copy
+from collections import deque
+from itertools import combinations
 
-matrix = [[0] * n for _ in range(n)]
-student = []
-for i in range((n ** 2) + 1):
-    line = []
-    student.append(line)
+n,m=map(int,input().split())
 
-
-def input_student():
-    ins = list(map(int, input().split()))
-    return ins[0], ins[1:]
-
-
-def find_like_student():
-    seat = {}
-    for num in like_student:
-        if not student[num]:
-            continue
-        y, x = student[num]
-        for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
-            if 0 <= nx < n and 0 <= ny < n and matrix[ny][nx] == 0:
-                if (ny, nx) in seat:
-                    seat[ny, nx] += 1
-                else:
-                    seat[ny, nx] = 1
-    seat = [k for k, v in seat.items() if max(seat.values()) == v]
-    return seat
-
-
-def not_find_friend():
-    value = -1
-    se = []
-    for y in range(n):
-        for x in range(n):
-            if matrix[y][x]!=0:
-                continue
-            count = 0
-            for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
-                if 0 <= nx < n and 0 <= ny < n and matrix[ny][nx] == 0:
-                    count += 1
-            if count > value:
-                value = count
-                se = [y, x]
-    return se
-
-def find_friend():
-    value = -1
-    se = []
-    for y,x in find_friend_seat:
-        count = 0
-        for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
-            if 0 <= nx < n and 0 <= ny < n and matrix[ny][nx] == 0:
-                count += 1
-        if count > value:
-            value = count
-            se = [[y,x]]
-        elif count==value:
-            se.append([y,x])
-    if len(se)==1:
-        return se[0]
-    else:
-        se.sort(key = lambda x :(x[0],x[1]))
-        return se[0]
+virus=[]
+matrix=[]
+for i in range(n):
+    line=list(map(int,input().split()))
+    for j in range(n):
+        if line[j]==1:
+            line[j]='-'
+        elif line[j]==2:
+            line[j]='*'
+            virus.append([i,j])
+    matrix.append(line)
+answer=999999
+for now in combinations(virus,m):
+    n_matrix=copy.deepcopy(matrix)
+    visit=[[0]*n for _ in range(n)]
+    queue = deque()
+    ma = 0
+    for y,x in now:
+        queue.append([y,x,0])
+    while queue:
+        y,x,count = queue.popleft()
+        for ny,nx in [y-1,x],[y+1,x],[y,x+1],[y,x-1]:
+            if 0<=ny<n and 0<=nx<n and n_matrix[ny][nx]!='-' and visit[ny][nx]==0:
+                visit[ny][nx]=1
+                if n_matrix[ny][nx]==0:
+                    n_matrix[ny][nx]=count+1
+                    ma = max(ma,count+1)
+                queue.append([ny,nx,count+1])
+    check = False
+    for _ in n_matrix:
+        if _.count(0):
+            check=True
+            break
+    if check:
+        continue
 
 
-
-satisfaction = []
-for i in range(n ** 2):
-    now_student, like_student = input_student()
-    satisfaction.append([now_student, like_student])
-    find_friend_seat = find_like_student()
-    if find_friend_seat:
-        if len(find_friend_seat) == 1:
-            y, x = find_friend_seat[0]
-            matrix[y][x] = now_student
-            student[now_student] = [y, x]
-        else:
-            y, x = find_friend()
-            matrix[y][x] = now_student
-            student[now_student] = [y, x]
-    else:
-        y, x = not_find_friend()
-        matrix[y][x] = now_student
-        student[now_student] = [y, x]
-
-
-answer = 0
-for now_student, like_student in satisfaction:
-    y,x = student[now_student]
-    count = 0
-    for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
-        if 0 <= nx < n and 0 <= ny < n and matrix[ny][nx] in like_student:
-            count+=1
-    if count==1:
-        answer+=1
-    elif count==2:
-        answer+=10
-    elif count==3:
-        answer+=100
-    elif count==4:
-        answer+=1000
-print(answer)
+    answer=min(answer,ma)
+if answer==999999:
+    print(-1)
+else:
+    print(answer)
