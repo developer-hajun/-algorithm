@@ -17,7 +17,6 @@ for i in range(1,n+1):
     value = sang[i][1]
     if i+during_day-1>n:
         continue
-    print(i+during_day-1)
     day[i+during_day-1]=max(day[i+during_day-1],day[i-1]+value)
     print(day)
 print(max(day))
