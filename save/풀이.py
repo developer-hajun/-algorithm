@@ -1,1 +1,0 @@
-t,w = map(int,input().split())
