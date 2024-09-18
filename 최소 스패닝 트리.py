@@ -11,10 +11,6 @@ def union_parent(a,b,x,y):
     else:
         parent[b]=x
 
-graph = []
-for i in range(v):
-    line=[]
-    graph.append(line)
 edge = []
 for j in range(e):
     a,b,c=map(int,input().split())
