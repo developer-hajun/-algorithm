@@ -3,18 +3,6 @@ from itertools import permutations
 
 n = int(input())
 ling = [[0]+list(map(int, input().split())) for _ in range(n)]
-def v():
-    global value
-    if now[0] == 1:
-        value += 1
-        now[0] = 0
-    if now[1] == 1:
-        now[0] = 1
-        now[1] = 0
-    if now[2] == 1:
-        now[1] = 1
-        now[2] = 0
-    now2 = 0
 answer = -1
 
 for human in permutations([2,3,4,5,6,7,8,9],8):
