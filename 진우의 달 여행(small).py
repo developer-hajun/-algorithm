@@ -7,7 +7,6 @@ line2 =[0]*m
 matrix = [line]+matrix+[line2]
 
 visit=[[[0]*m for _ in range(n+1)] for _ in range(3)]
-#이전에 어떤각도로 들어왓는지
 for y in range(1,n+1):
     for x in range(m):
         #우대각으로 들어올려면 이전에 아래와 좌대각으로 들어온 값을 불러오면됨

@@ -9,4 +9,5 @@ for _ in range(t):
         if mod1 == 0 and mod2 == 1:
             break
         count+=1
+
     print(a,count+1)
