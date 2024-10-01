@@ -1,42 +1,35 @@
-import copy
-import heapq
-
-n,m,x = map(int,input().split())
-
-move = [[101]*(n+1) for _ in range(n+1)]
-visit = [[False]*(n+1) for _ in range(n+1)]
-
-edge = [[] for _ in range(n+1)]
-for _ in range(m):
-    a,b,c = map(int,input().split())
-    edge[a].append([b,c])
+def cursorDown(cursor):
+    cursor += 1
+    print(1, end='')
+    return cursor
 
 
-
-def dijkstra(start):
-    q=[]
-    heapq.heappush(q, (0, start))
-    distance[start]=0
-    while q : # 큐가 비어있지 않다면
-        dist, now= heapq.heappop(q)
-        if distance[now] < dist:
-            continue
-        for i in edge[now]:
-            cost = dist + i[1]
-            if cost <distance[i[0]]:
-                distance[i[0]]=cost
-                heapq.heappush(q, (cost, i[0]))
-
-distance = [int(1e9)] * (n + 1)
-dijkstra(x)
-now = copy.deepcopy(distance)
+def channelUp(cursor):
+    if cursor > 0:
+        cList[cursor], cList[cursor - 1] = cList[cursor - 1], cList[cursor]
+        cursor -= 1
+        print(4, end='')
+    return cursor
 
 
-dist = [0]*(n+1)
-for i in range(1,n+1):
-    if i==x:
-        continue
-    distance = [int(1e9)] * (n + 1)
-    dijkstra(i)
-    dist[i]= distance[x]+now[i]
-print(max(dist))
+cList = []
+
+for _ in range(int(input())):
+    cList.append(input())
+
+cursor = 0
+while True:
+    if cList[cursor] != 'KBS1':
+        cursor = cursorDown(cursor)
+    else:
+        cursor = channelUp(cursor)
+    if cList[0] == 'KBS1':
+        break
+
+while True:
+    if cList[cursor] != 'KBS2':
+        cursor = cursorDown(cursor)
+    else:
+        cursor = channelUp(cursor)
+    if cList[1] == 'KBS2':
+        break
