@@ -1,35 +1,67 @@
-def cursorDown(cursor):
-    cursor += 1
-    print(1, end='')
-    return cursor
+import copy
+import math
+
+file = open('input_closest_pair.txt','r')
+
+now = file.readlines()
 
 
-def channelUp(cursor):
-    if cursor > 0:
-        cList[cursor], cList[cursor - 1] = cList[cursor - 1], cList[cursor]
-        cursor -= 1
-        print(4, end='')
-    return cursor
+
+arr = []
+for line in now:
+    line = line.replace('\n','')
+    line = line.split("\t")
+    arr.append(list(map(int,line)))
+arr.sort()
+index = 1
+index_arr_x = []
+index_arr_y = []
+for x,y in arr:
+    index_arr_x.append([index,x,y])
+    index_arr_y.append([index, x, y])
+    index += 1
+index_arr_y.sort(key = lambda x: x[2])
 
 
-cList = []
 
-for _ in range(int(input())):
-    cList.append(input())
+def dist(now_value):
+    answer = 99999
+    for i in range(len(now_value)):
+        for j in range(i+1,len(now_value)):
+            p1x,p1y=now_value[i][1],now_value[i][2]
+            p2x,p2y=now_value[j][1],now_value[j][2]
+            answer =min(answer,math.sqrt(math.pow(p1x-p2x,2) + math.pow(p1y-p2y,2)))
+            if p1x==10 and p1y == 10 and p2x==11 and p1y==32:
+                print(answer)
+    return answer
+def devide(start,end):
+    if end-start<=3:
+        now = dist(index_arr_x[start:end])
+        return now
+    mid = (start+end)//2
+    cpl = devide(start,mid)
+    cpr = devide(mid,end)
+    min_dist = min(cpl,cpr)
+    mid_arr=[]
+    mid_point = []
+    if mid%2==0:#개수가 홀수인경우
+        value1,value2=index_arr_x[mid][1],index_arr_x[mid+1][1]
+        for i in range(start,end+1):
+            if abs(value1-index_arr_x[i][1])<=min_dist:
+                mid_arr.append(index_arr_x[i][0])
+            elif abs(index_arr_x[i][1]-value2)<=min_dist:
+                mid_arr.append(index_arr_x[i][0])
+        for index, x, y in index_arr_y:
+            if index in mid_arr:
+                mid_point.append((index, x, y))
+            if len(mid_arr) == len(mid_point):
+                break
+    else: #개수가 짝수인경우
+        value = index_arr_x[mid][0]
+        for i in range(start,end+1):
+            if abs(value-index_arr_x[i][1])<=min_dist:
+                mid_arr.append(index_arr_x[i][0])
+    cpm = dist(mid_point)
+    return min(cpl,cpr,cpm)
 
-cursor = 0
-while True:
-    if cList[cursor] != 'KBS1':
-        cursor = cursorDown(cursor)
-    else:
-        cursor = channelUp(cursor)
-    if cList[0] == 'KBS1':
-        break
-
-while True:
-    if cList[cursor] != 'KBS2':
-        cursor = cursorDown(cursor)
-    else:
-        cursor = channelUp(cursor)
-    if cList[1] == 'KBS2':
-        break
+print(devide(0,index-2))
