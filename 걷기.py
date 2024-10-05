@@ -15,3 +15,6 @@ else:
 m3 = (min(x, y) * s) + (abs(x-y) * w)
 
 print(min(m1, m2, m3))
+
+
+
