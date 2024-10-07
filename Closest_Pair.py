@@ -1,7 +1,7 @@
 import copy
 import math
 
-file = open('input_closest_pair.txt','r')
+file = open('save/input_closest_pair.txt', 'r')
 
 now = file.readlines()
 
@@ -42,6 +42,7 @@ def dist2(now_value,dists):
             if abs(p1y-p2y)>dists:
                 break
     return answer
+
 def devide(start,end):
     if end-start<=3:
         now = dist(index_arr_x[start:end])
