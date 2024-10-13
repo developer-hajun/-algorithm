@@ -1,17 +1,38 @@
-from cmath import sqrt
+import sys
+from collections import deque
+T = int(input())
 
-n = int(input())
-value = [0] * (int(n ** (1 / 2)) + 2)
+for _ in range(T):
+    A, B = map(int,sys.stdin.readline().rstrip().split())
 
-for _ in range(0,int(n**(1/2)+2)):
-    value[_] = pow(_, 2)
-start=int(n**(1/2))+1
-count = 0
-dp = [x for x in range(n+1)]
-for i in range(1,n+1):
-    for j in range(i):
-        if value[j]>i:
+    visited = [False for i in range(10001)]
+    deq = deque()
+    deq.append([A,''])
+    visited[A] = True
+
+    while deq:
+        num, command = deq.popleft()
+
+        if num == B:
+            print(command)
             break
-        if dp[i]>dp[i-value[j]]+1:
-            dp[i] = dp[i-value[j]]+1
-print(dp[n])
+
+        d = num * 2 % 10000
+        if not visited[d]:
+            visited[d] = True
+            deq.append([d, command + 'D'])
+
+        s = (num - 1) % 10000
+        if not visited[s]:
+            visited[s] = True
+            deq.append([s, command + 'S'])
+
+        l = num // 1000 + (num % 1000)*10
+        if not visited[l]:
+            visited[l] = True
+            deq.append([l, command + 'L'])
+
+        r = num // 10 + (num % 10) * 1000
+        if not visited[r]:
+            visited[r] = True
+            deq.append([r, command + 'R'])
