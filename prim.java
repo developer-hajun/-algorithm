@@ -58,6 +58,7 @@ public class prim {
             Edge p = pq.poll();
             int node = p.to;
             int weight = p.weight;
+
             if(visited[node]) continue;
             // 선택한 간선의 정점으로부터 가장 낮은 가중치 갖는 정점 선택
             visited[node]= true;
@@ -73,4 +74,5 @@ public class prim {
             System.out.println(next.start+" "+next.to+" "+next.weight);
         }
     }
+
 }
