@@ -65,7 +65,6 @@ public class prim {
             for(Edge next : list[node]) {
                 if(!visited[next.to]) {
                     pq.add(next);
-
                 }
             }
         }
