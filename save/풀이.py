@@ -1,36 +1,14 @@
-job = [[7,8,"t1"],[3,7,"t2"],[1,5,"t3"],[5,9,"t4"],[0,2,"t5"],[6,8,"t6"],[1,6,"t7"]]
-job.sort(key = lambda x:[x[0],-x[1]])
-save = []
-machine = []
-ends = 0
-for start,end,t in job:
-    ends = max(end,ends)
-    if not machine:
-        save.append([0,start, end, t])
-        machine.append(end)
-    else:
-        ch = True
-        for i in range(len(machine)):
-            if t=="t4":
-                print(machine[i])
-            if machine[i]<=start:
-                ch = False
-                machine[i]=end
-                save.append([i,start, end, t])
-                break
-        if ch:
-            save.append([len(machine), start, end, t])
-            machine.append(end)
-f = [['machine '+str(_+1)]+['  ']*ends for _ in range(len(machine))]
-for num,start,end,t in save:
-    for i in range(start+1,end+1):
-        f[num][i] = t
-f.reverse()
-f = [["time     ","0 ","1 ","2 ","3 ","4 ","5 ","6 ","7 ","8 "]]+f
-for _ in f:
-    for k in _:
-        print(k,end=' ')
-    print()
+n = int(input())
 
-
-
+now = [0,1,1,1,1,1,1,1,1,1]
+for i in range(1,n):
+    new_arr=[]
+    for j in range(10):
+        value = 0
+        if 0<=j-1:
+            value+=now[j-1]
+        if j+1<10:
+            value+=now[j+1]
+        new_arr.append(value%1000000000)
+    now=new_arr
+print(sum(now)%1000000000)
