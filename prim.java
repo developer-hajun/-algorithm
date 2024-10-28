@@ -66,12 +66,13 @@ public class prim {
             for(Edge next : list[node]) {
                 if(!visited[next.to]) {
                     pq.add(next);
+
                 }
             }
         }
         ed.remove(0);
         for(Edge next : ed) {
-            System.out.println(next.start+" "+next.to+" "+next.weight);
+            System.out.println("("+next.start+", "+next.to+", "+next.weight+")");
         }
     }
 

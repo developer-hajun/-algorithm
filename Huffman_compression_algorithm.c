@@ -6,17 +6,22 @@
 
 #define MAX_ELEMENT 200
 
-typedef struct {
+typedef struct Node{
     char character;
     int frequency;
     struct Node* left;
     struct Node* right;
-} Node;
+}Node;
 
-typedef struct {
+typedef struct Queue {
     Node* nodes[MAX_ELEMENT];
     int size;
-} Queue;
+}Queue;
+
+typedef struct Pair{
+    char first;
+    char* second;
+}Pair;
 
 Node* createNode(char character, int frequency) {
     Node* node = (Node*)malloc(sizeof(Node));
@@ -73,7 +78,7 @@ void find(char* str, Node* node) {
         }
         return;
     }
-   
+
     if (node->left != NULL) {
         char newStr0[12];
         snprintf(newStr0, sizeof(newStr0), "%s0", str);
@@ -85,23 +90,20 @@ void find(char* str, Node* node) {
         find(newStr1, node->right);
     }
 }
-typedef struct {
-    char first;  
-    char* second;
-} Pair;
+
 
 int compare(const void* a, const void* b) {
     const Pair* pairA = (const Pair*)a;
     const Pair* pairB = (const Pair*)b;
 
     size_t lenA = strlen(pairA->second);
-    size_t lenB = strlen(pairB->second); 
+    size_t lenB = strlen(pairB->second);
 
     return  -((lenA > lenB) - (lenA < lenB));
 }
 
 
-void replace(char* str, const char* oldSubStr, char newChar){
+void replace(char* str, const char* oldSubStr, char newChar) {
     char* pos, temp[100];
     int index = 0;
     int oldSubStrLen = strlen(oldSubStr);
@@ -159,22 +161,30 @@ int main() {
     char newStr[12] = "";
     find(newStr, finallyNode);
     Pair pairs[4];
-    pairs[3].first = 'A';
-    pairs[3].second = Acode;
-    pairs[1].first = 'C';
-    pairs[1].second = Ccode;
-    pairs[2].first = 'T';
-    pairs[2].second = Tcode;
-    pairs[0].first = 'G';
-    pairs[0].second = Gcode;
+    pairs[0].first = 'A';
+    pairs[0].second = Acode;
+    pairs[3].first = 'C';
+    pairs[3].second = Ccode;
+    pairs[1].first = 'T';
+    pairs[1].second = Tcode;
+    pairs[2].first = 'G';
+    pairs[2].second = Gcode;
+    printf("Huffman code (");
+    for(int i=0;i<4;i++){
+      printf("'%c' = %s",pairs[i].first,pairs[i].second);
+      if(i<3){
+        printf(", ");
+      }
+      else{
+      printf(")\n");
+      }
+    }
     size_t size = sizeof(pairs) / sizeof(pairs[0]);
     qsort(pairs, size, sizeof(Pair), compare);
 
     char target[] = "10110010001110101010100";
     for (int i = 0; i < 4; i++) {
         replace(target, pairs[i].second, pairs[i].first);
-        printf("%c %s %s\n",pairs[i].first, pairs[i].second, target);
     }
-   
+    printf("%s\n",target);
 }
-    

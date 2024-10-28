@@ -1,10 +1,12 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class Set_cover_algorithm {
     static List<Integer>[] list;
 
     public static void main(String[] args) {
-        long beforeTime = System.currentTimeMillis();
+
         int[][] edges = {{1, 2},
                 {1, 8},
                 {1, 3},
@@ -58,6 +60,7 @@ public class Set_cover_algorithm {
         }
         //Set생성
         List<Set<Integer>> c = new ArrayList<>(List.of());
+        Instant beforeTime = Instant.now();
         while (!U.isEmpty()){
             Set<Integer> now = Set.of();
             Set<Integer> pick = Set.of();
@@ -74,7 +77,34 @@ public class Set_cover_algorithm {
             U.removeAll(pick);
             System.out.println(pick);
         }
-        long afterTime = System.currentTimeMillis();
-        System.out.println("running time: "+(afterTime-beforeTime)+"ms");
+        Instant afterTime = Instant.now();
+        long diffTime = Duration.between(beforeTime, afterTime).toMillis();
+        System.out.println("running time: "+diffTime+"nanosec");
+
+        for (int num : setting) {
+            U.add(num); // 각 요소를 Set에 추가
+        }
+
+
+
+        beforeTime = Instant.now();
+        while (!U.isEmpty()){
+            Set<Integer> now = Set.of();
+            Set<Integer> pick = Set.of();
+            for (Set<Integer> set : c) {
+                Set<Integer> intersection = new HashSet<>(U);
+                intersection.retainAll(set);
+                if (now.size() < intersection.size()) {
+                    now = intersection;
+                    pick=set;
+                }
+            }
+            c.remove(pick);
+            U.removeAll(pick);
+        }
+        afterTime = Instant.now();
+        diffTime = Duration.between(beforeTime, afterTime).toMillis();
+        System.out.println("Optimal running time: "+diffTime+"nanosec");
+
     }
 }

@@ -22,6 +22,7 @@ void union_parent(int a, int b, int x, int y) {
 }
 
 int main() {
+    clock_t start = clock();
     vector<Edge> edges = {
         {1,1,2} ,{1,2,5},{2,1,5},{2,0,3},{3,3,4},{4,0,4},{4,1,3},{7,3,5},{8,0,1},{9,4,5}
     };
@@ -47,4 +48,6 @@ int main() {
     for (const auto& edge : answer) {
         cout << "("<<edge.src<<", "<<edge.dest<<", "<<edge.cost<<')'<< endl;
     }
+    clock_t end = clock();
+      printf("running time: %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
 }

@@ -8,7 +8,7 @@
 int main() {
     clock_t start = clock();
 
-    printf("     서울  천안  논산  대전  광주  원주  강릉  대구  포항  부산  \n");
+    printf("                 seoul     cheonan     nonsan    daejeon    gwangju      wonju    gangneung    daegu    pohang      busan  \n");
     int graph[10][10] = {
         {0,12,INF,INF,INF,15,INF,INF,INF,INF},
         {12,0,4,10,INF,INF,INF,INF,INF,INF},
@@ -24,7 +24,7 @@ int main() {
 
     //서울0,천안1,논산2,대전3,광주4,원주5,강릉6,대구7,포항8,부산9
     for (int i = 0; i < 10; i++) {
-        char* planets[] = { "서울",  "천안", "논산","대전", "광주",  "원주","강릉", "대구", "포항","부산" };
+        char* planets[] = {"seoul","cheonan","nonsan","daejeon","gwangju","wonju","Gangneung","Daegu","Pohang","Busan"};
 
         int distance[10] = { INF, INF, INF, INF, INF, INF, INF, INF, INF, INF };
         int visit[10] = { 0, };
@@ -55,9 +55,9 @@ int main() {
             //다음에 실행할거 찾기
 
         }
-        printf("%s ", planets[i]);
+        printf("%10s ", planets[i]);
         for (int j = 0; j < 10; j++) {
-            printf("%-5d ", distance[j]);
+            printf("%10d ", distance[j]);
         }
         printf("\n");
     }
