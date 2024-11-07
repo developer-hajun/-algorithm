@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define INF	1000000	
+#define INF	1000000
 
 int main() {
     clock_t start = clock();
@@ -22,7 +22,7 @@ int main() {
         {INF,INF,INF,INF,15,INF,INF,9,5,0}
     };
 
-    //¼­¿ï0,Ãµ¾È1,³í»ê2,´ëÀü3,±¤ÁÖ4,¿øÁÖ5,°­¸ª6,´ë±¸7,Æ÷Ç×8,ºÎ»ê9
+    //ï¿½ï¿½ï¿½ï¿½0,Ãµï¿½ï¿½1,ï¿½ï¿½ï¿½2,ï¿½ï¿½ï¿½ï¿½3,ï¿½ï¿½ï¿½ï¿½4,ï¿½ï¿½ï¿½ï¿½5,ï¿½ï¿½ï¿½ï¿½6,ï¿½ë±¸7,ï¿½ï¿½ï¿½ï¿½8,ï¿½Î»ï¿½9
     for (int i = 0; i < 10; i++) {
         char* planets[] = {"seoul","cheonan","nonsan","daejeon","gwangju","wonju","Gangneung","Daegu","Pohang","Busan"};
 
@@ -34,7 +34,7 @@ int main() {
         while (value != 10) {
             visit[now] = 1;
             value += 1;
-            //¹æ¹®Ã³¸®
+            //ï¿½æ¹®Ã³ï¿½ï¿½
             for (int j = 0; j < 10; j++) {
                 if (visit[j]) continue;
                 if (graph[now][j] == INF) continue;
@@ -43,7 +43,7 @@ int main() {
                     distance[j] = now_value;
                 }
             }
-            //±×·¡ÇÁ ¾÷µ¥ÀÌÆ®
+            //ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
             int v = INF;
             for (int j = 0; j < 10; j++) {
                 if (visit[j]) continue;
@@ -52,7 +52,7 @@ int main() {
                 now = j;
             }
 
-            //´ÙÀ½¿¡ ½ÇÇàÇÒ°Å Ã£±â
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò°ï¿½ Ã£ï¿½ï¿½
 
         }
         printf("%10s ", planets[i]);
