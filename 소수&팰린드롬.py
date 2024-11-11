@@ -1,3 +1,4 @@
+
 import math
 
 def isPrime(x): # 소수인지 판별해주는 함수
