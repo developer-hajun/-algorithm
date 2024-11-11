@@ -1,3 +1,4 @@
+
 n = int(input())
 arr=[int(input()) for _ in range(n)]
 dp=[1]*n
