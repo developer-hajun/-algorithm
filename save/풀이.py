@@ -1,23 +1,11 @@
-import math
+from itertools import combinations
+def solution(targets):
+    answer = 0
+    targets.sort(key = lambda x: [x[1], x[0]])
+    s = e = 0
+    for target in targets:
+        if target[0] >= e:
+            answer += 1
+            e = target[1]
 
-def isPrime(x): # 소수인지 판별해주는 함수
-    for i in range(2, int(math.sqrt(x)+1)):
-        if x % i == 0:
-            return False
-    return True
-
-N = int(input())
-result = 0
-
-for i in range(N, 1000001):
-    if i == 1:
-        continue
-    if str(i) == str(i)[::-1]:
-        if isPrime(i) == True:
-            result = i
-            break
-
-if result == 0:
-    result = 1003001
-
-print(result)
+    return answer
