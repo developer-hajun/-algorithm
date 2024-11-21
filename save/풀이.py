@@ -1,29 +1,42 @@
-from collections import deque
+def find(value):
+    if arr[0][0] == arr[1][1] == arr[2][2] == value:
+        return True
+    if arr[0][2] == arr[1][1] == arr[2][0] == value:
+        return True
+    if arr[0][0] == arr[0][1] == arr[0][2] == value:
+        return True
+    if arr[1][0] == arr[1][1] == arr[1][2] == value:
+        return True
+    if arr[2][0] == arr[2][1] == arr[2][2] == value:
+        return True
+    if arr[0][0] == arr[1][0] == arr[2][0] == value:
+        return True
+    if arr[0][1] == arr[1][1] == arr[2][1] == value:
+        return True
+    if arr[0][2] == arr[1][2] == arr[2][2] == value:
+        return True
+    return False
 
 
-def solution(maps):
-    visit = [[0] * len(maps[0]) for _ in range(len(maps))]
+arr = []
 
-    answer = []
 
-    for i in range(len(maps)):
-        for j in range(len(maps[0])):
-            if visit[i][j] == 0 and maps[i][j] != 'X':
-                queue = deque()
-                queue.append([i, j])
-                visit[i][j] = 1
-                value = int(maps[i][j])
-                while queue:
-                    y, x = queue.popleft()
-                    for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
-                        if 0 <= ny < len(maps) and 0 <= nx < len(maps[0]) and visit[ny][nx] == 0 and maps[ny][
-                            nx] != 'X':
-                            value += int(maps[ny][nx])
-                            visit[ny][nx] = 1
-                            queue.append([ny, nx])
-                answer.append(value)
-    if not answer:
-        return [-1]
-    else:
-        answer.sort()
-        return answer
+def solution(string):
+    arr.append(list(string[0].strip()))
+    arr.append(list(string[1].strip()))
+    arr.append(list(string[2].strip()))
+
+    X = 0
+    O = 0
+    for i in range(3):
+        for j in range(3):
+            if arr[i][j] == 'X':
+                X += 1
+            elif arr[i][j] == 'O':
+                O += 1
+
+    if O == X and not find('O'):
+        return 1
+    if O == X + 1 and not find('X'):
+        return 1
+    return 0
