@@ -1,16 +1,6 @@
-from heapq import heappop, heappush
-
-
-def solution(n, k, enemy):
-    answer, sumEnemy = 0, 0
-    heap = []
-
-    for e in enemy:
-        heappush(heap, -e)
-        sumEnemy += e
-        if sumEnemy > n:
-            if k == 0: break
-            sumEnemy += heappop(heap)
-            k -= 1
-        answer += 1
+def solution(k, d):
+    answer = 0
+    for x in range(0,d+1,k) :
+        max_y = int( (d**2 - x**2)**0.5 )
+        answer += (max_y // k) +1
     return answer
