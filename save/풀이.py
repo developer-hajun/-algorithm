@@ -1,6 +1,15 @@
-def solution(k, d):
+from collections import defaultdict,Counter
+
+def solution(k, tangerine):
+    gul = defaultdict(list)
+    arr = []
+    for key,value in Counter(tangerine).items():
+        arr.append([value,key])
+    arr.sort()
+    count = 0
     answer = 0
-    for x in range(0,d+1,k) :
-        max_y = int( (d**2 - x**2)**0.5 )
-        answer += (max_y // k) +1
+    while count<k:
+        value ,key = arr.pop()
+        answer+=1
+        count+=value
     return answer
