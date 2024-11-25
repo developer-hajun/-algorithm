@@ -1,32 +1,22 @@
-def solution(cards):
-    answer = []
-    def dfs(one,two,visit,count,box,num):
-        if count==len(cards):
-            answer.append(one*two)
-            return
-        if box==1:
-            nv = cards[num]-1
-            if visit[nv]==0:
-                visit[nv]=1
-                dfs(one+1,two,visit,count+1,1,nv)
-                visit[nv]=0
-            else:
-                for i in range(len(cards)):
-                    if visit[i]==0:
-                        visit[i]=1
-                        dfs(one,1,visit,count+1,2,i)
-                        visit[i]=0
-        elif box==2:
-            nv = cards[num]-1
-            if visit[nv]==0:
-                visit[nv]=2
-                dfs(one,two+1,visit,count+1,2,nv)
-                visit[nv]=0
-            else:
-                answer.append(one*two)
-                return
-    for i in range(len(cards)): #임의 상자 번호
-        now = [0]*len(cards)
-        now[i] = 1
-        dfs(1,0,now,1,1,i)
-    return max(answer)
+def xor_array(arr):
+    result = 0
+    for num in arr:
+        result ^= num  # XOR 연산
+    return result
+
+
+def solution(data, col, row_begin, row_end):
+    data.sort(key=lambda x: (x[col - 1], -x[0]))
+    data = data[row_begin - 1: row_end]
+    now = 0
+
+    value = []
+    for i in range(row_begin, row_end + 1):
+        v = 0
+        for j in data[now]:
+            v += j % i
+        now += 1
+        value.append(v)
+
+    xor_result = xor_array(value)
+    return xor_result
