@@ -29,7 +29,8 @@ vector<int> merge(vector<int>& vec1,vector<int>& vec2) {
     while (i < vec1.size() && j < vec2.size()) {
         if (vec1[i] < vec2[j]) {
             merged.push_back(vec1[i]);
-            i++;
+
+
         } else {
             merged.push_back(vec2[j]);
             j++;
