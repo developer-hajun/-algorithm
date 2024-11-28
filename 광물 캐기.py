@@ -27,4 +27,3 @@ def solution(picks, minerals):
     return answer
 
 
-
