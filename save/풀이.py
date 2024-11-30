@@ -1,33 +1,22 @@
-import re
-from itertools import combinations
-from collections import Counter
+def xor_array(arr):
+    result = 0
+    for num in arr:
+        result ^= num  # XOR 연산
+    return result
 
 
-def solution(user_id, banned_id):
-    regex_patterns = [p.replace('*', '.') for p in banned_id]
-    dic = {j: set() for j in regex_patterns}
+def solution(data, col, row_begin, row_end):
+    data.sort(key=lambda x: (x[col - 1], -x[0]))
+    data = data[row_begin - 1: row_end]
+    now = 0
 
-    for i in user_id:
-        for j in regex_patterns:
-            if len(i) == len(j) and re.match(j, i):
-                dic[j].add(i)
+    value = []
+    for i in range(row_begin, row_end + 1):
+        v = 0
+        for j in data[now]:
+            v += j % i
+        now += 1
+        value.append(v)
 
-    count_regex = {a: b for a, b in Counter(regex_patterns).items()}
-    global lens
-    lens = len(regex_patterns)
-    arr = set()
-
-    def dfs(now, value):
-        print(now, value)
-        if now == lens:
-            if len(value) == len(regex_patterns):
-                arr.add(tuple(sorted(value)))
-            return
-        regex = regex_patterns[now]
-        for _ in combinations(dic[regex], count_regex[regex]):
-            dfs(now + count_regex[regex], set().union(value, _))
-
-    dfs(0, set())
-    print(arr)
-    return len(arr)
-
+    xor_result = xor_array(value)
+    return xor_result
