@@ -1,3 +1,4 @@
+
 def solution(n):
     arr = [0]*(n+1)
     if n<=2:
