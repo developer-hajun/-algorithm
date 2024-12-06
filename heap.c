@@ -61,8 +61,8 @@ int main() {
     fclose(fp);
     
     
-    
-    heapSort(value, n);
+    int value2[] = {40, 80, 60, 50, 30, 70, 10, 20};
+    heapSort(value2, 8);
     
     
     
