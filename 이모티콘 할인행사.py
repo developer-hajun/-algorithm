@@ -1,24 +1,27 @@
 from itertools import product
+
+
 def solution(users, emoticons):
-    answer = []
-    for case in product([10,20,30,40],repeat = len(emoticons)):
-        arr = []
-        for i in range(len(emoticons)):
-            value = emoticons[i]-(emoticons[i]*(case[i]/100))
-            arr.append(value)
-        user = [0]*len(users)
-        for i in range(len(arr)):
-            for j in range(len(user)):
-                if case[i]<users[j][0]:
-                    continue
-                user[j]+=arr[i]
-        plus=0
-        count = 0
-        for i in range(len(user)):
-            if user[i]>=users[i][1]:
-                plus+=1
+    answer = [0, 0]
+    for case in product([10, 20, 30, 40], repeat=len(emoticons)):
+        emoticon = []
+        for i in range(len(case)):
+            emoticon.append([case[i], emoticons[i] - emoticons[i] * (case[i] / 100)])
+
+        now_answer = [0, 0]
+
+        for per, money in users:
+            value = 0
+            for ep, mo in emoticon:
+                if ep >= per:
+                    value += mo
+            if value >= money:
+                now_answer[0] += 1
             else:
-                count+=user[i]
-        answer.append([plus,count])
-    answer.sort(key=lambda x:[-x[0],-x[1]])
-    return answer[0][0],int(answer[0][1])
+                now_answer[1] += value
+        if answer[0] < now_answer[0]:
+            answer = now_answer
+        elif answer[0] == now_answer[0] and answer[1] < now_answer[1]:
+            answer = now_answer
+    return answer
+
