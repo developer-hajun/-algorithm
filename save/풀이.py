@@ -1,28 +1,40 @@
-from collections import deque
+n,m = map(int,input().split())
+arr = [list(map(int,input().split())) for _ in range(n)]
 
-n = int(input())
-
-sang = []
-sang.append([])
-for i in range(n):
-    a,b = map(int,input().split())
-    sang.append([a,b])
-
-q = deque()
-
-day = [0]*(n+2)
-
-def bosu(a,b):
-    global day
-    for i in range(1,n+1):
-        if i<a or i+sang[i][0]>n+1: #현재 날짜보다 그전에 의뢰이거나,의뢰를 받았을때 n일을 넘으면 패쓰
+def check(line):
+    visit = [False]*n
+    for i in range(0,n-1):
+        if line[i]==line[i+1]:
             continue
+        elif abs(line[i]-line[i+1])>1:
+            return False
+        elif line[i]>line[i+1]:
+            now = line[i+1]
+            for j in range(i+1,i+m+1):
+                if j>=n:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j]=True
         else:
-            if b+sang[i][1] <= day[i+sang[i][0]]: #내가 상담을 함으로써 받을수 있는 보수보다, 다른 상담으로 받을수 있는 액수가 더 클때
-                continue
-            else:
-                day[i+sang[i][0]] = b+sang[i][1]
-                bosu(i+sang[i][0],b+sang[i][1])
+            now = line[i]
+            for j in range(i,i-m,-1):
+                if j<0:
+                    return False
+                if line[j]!=now:
+                    return False
+                elif visit[j]:
+                    return False
+                visit[j] = True
+    return True
 
-bosu(1,0)#상담받을수 있는날짜,현재보수
-print(max(day))
+answer=0
+for i in range(n):
+    if check(arr[i]):
+        answer+=1
+for i in range(n):
+    if check([arr[a][i] for a in range(n)]):
+        answer+=1
+print(answer)
