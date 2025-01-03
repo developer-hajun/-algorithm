@@ -1,40 +1,45 @@
-n,m = map(int,input().split())
-arr = [list(map(int,input().split())) for _ in range(n)]
+
+
+n,l = map(int,input().split())
+
+matrix = [list(map(int,input().split())) for i in range(n)]
+
 
 def check(line):
-    visit = [False]*n
-    for i in range(0,n-1):
+    global q
+    visit = [False] * n
+    for i in range(n-1):
         if line[i]==line[i+1]:
             continue
-        elif abs(line[i]-line[i+1])>1:
+        if abs(line[i]-line[i+1])>1:
             return False
         elif line[i]>line[i+1]:
-            now = line[i+1]
-            for j in range(i+1,i+m+1):
-                if j>=n:
+            value = line[i+1]
+            for now in range(i+1,i+l+1):
+                if now>=n:
                     return False
-                if line[j]!=now:
+                if line[now]!=value:
                     return False
-                elif visit[j]:
+                if visit[now]:
                     return False
-                visit[j]=True
+                visit[now]=True
         else:
-            now = line[i]
-            for j in range(i,i-m,-1):
-                if j<0:
+            value = line[i]
+            for now in range(i,i-l,-1):
+                if now<0:
                     return False
-                if line[j]!=now:
+                if line[now]!=value:
                     return False
-                elif visit[j]:
+                if visit[now]:
                     return False
-                visit[j] = True
+                visit[now]=True
     return True
+answer =0
 
-answer=0
-for i in range(n):
-    if check(arr[i]):
+for q in range(n):
+    if check(matrix[q]):
         answer+=1
-for i in range(n):
-    if check([arr[a][i] for a in range(n)]):
+for q in range(n):
+    if check([matrix[a][q] for a in range(n)]):
         answer+=1
 print(answer)
