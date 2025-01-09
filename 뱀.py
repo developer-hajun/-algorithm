@@ -1,79 +1,56 @@
-import sys
 from collections import deque
+n = int(input())
+k = int(input())
 
-n = int(input()); k =int(input())
-matrix = [[0]*n for _ in range(n)]
 
-for i in range(k):
-    a,b = map(int,input().split())
-    matrix[a-1][b-1] = 1
-matrix[0][0]=2
-move = [[],[0,1],[0,-1],[-1,0],[1,0]]
-bam =deque()
-bam.append([0,0])
-now_move = 1
+move = [[0,1],[1,0],[0,-1],[-1,0]]
+matrix = [[0]*(n+1) for i in range(n+1)]
+matrix[1][1]=2
+for _ in range(k):
+    y,x = map(int,input().split())
+    matrix[y][x] = 1
+l = int(input())
+turn = []
+for _ in range(l):
+    y,x = input().split()
+    turn.append([int(y),x])
+turn.reverse()
 
-c = int(input())
-command = deque()
+bam = deque()
+bam.append([1,1])
+move_dist=0 #오른쪽
 
-max_time = -1
-for _ in range(c):
-    time , comm = input().split()
-    max_time = max(max_time, int(time))
-    command.append([int(time),comm])
-count = 1
+count = 0
 
-for i in range(1,max_time+1):
-    next_y = bam[0][0]+move[now_move][0]
-    next_x = bam[0][1]+move[now_move][1]
-    if 0>next_y or next_y>=n or 0>next_x or next_x>=n or matrix[next_y][next_x]==2:
-        print(count)
-        sys.exit()
-    if matrix[next_y][next_x]==1:
-        matrix[next_y][next_x]=0
-        bam.appendleft([next_y,next_x])
-    else:
-        y,x= bam.pop()
-        matrix[y][x]=0
-        bam.appendleft([next_y,next_x])
-    matrix[next_y][next_x]=2
 
-    if command[0][0] == i:
-        now = command.popleft()[1]
-        if now_move==1:
-            if now=='L':
-                now_move=3
-            else:
-                now_move=4
-        elif now_move==2:
-            if now == 'L':
-                now_move = 4
-            else:
-                now_move = 3
-        elif now_move==3:
-            if now == 'L':
-                now_move = 2
-            else:
-                now_move = 1
-        elif now_move==4:
-            if now == 'L':
-                now_move = 1
-            else:
-                now_move = 2
-    count+=1
 while True:
-    next_y = bam[0][0] + move[now_move][0]
-    next_x = bam[0][1] + move[now_move][1]
-    if 0 > next_y or next_y >= n or 0 > next_x or next_x >= n or matrix[next_y][next_x] == 2:
-        print(count)
-        sys.exit()
-    if matrix[next_y][next_x] == 1:
-        matrix[next_y][next_x] = 0
-        bam.appendleft([next_y, next_x])
+    ny,nx = bam[0][0]+move[move_dist][0],bam[0][1]+move[move_dist][1]
+    if ny<1 or ny>n or nx<1 or nx>n or matrix[ny][nx]==2:
+        print(count+1)
+        break
+
+    if matrix[ny][nx]==1:
+        matrix[ny][nx]=0
+        bam.appendleft([ny,nx])
     else:
-        matrix[next_y][next_x] = 0
-        y, x = bam.pop()
-        matrix[y][x] = 0
-        bam.appendleft([next_y, next_x])
-    matrix[next_y][next_x] = 2
+        y,x = bam.pop()
+        matrix[y][x]=0
+        bam.appendleft([ny,nx])
+    matrix[ny][nx]=2
     count += 1
+    if turn and turn[-1][0]==count:
+        t = turn[-1][1]
+        turn.pop()
+        if t=='D':
+            move_dist+=1
+            if move_dist==4:
+                move_dist=0
+        else:
+            move_dist-=1
+            if move_dist==-1:
+                move_dist=3
+    # for _ in matrix:
+    #     print(_)
+    # print()
+
+

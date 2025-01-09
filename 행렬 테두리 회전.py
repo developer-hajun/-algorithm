@@ -1,44 +1,40 @@
 from collections import deque
 
 
-def create_matrix(rows, columns):
-    matrix = []
-    count = 1
-    for i in range(rows):
-        row = []
-        for j in range(columns):
-            row.append(count)
-            count += 1
-        matrix.append(row)
-    return matrix
-
-
 def solution(rows, columns, queries):
+    matrix = []
+    matrix.append([0] * columns)
+    now = 1
+    for i in range(rows):
+        a = [0]
+        for j in range(columns):
+            a.append(now)
+            now += 1
+        matrix.append(a)
     answer = []
-    matrix = create_matrix(rows, columns)
 
-    def rotate(y, x, ny, nx):
-        route = deque()
-        for go in range(x, nx + 1):
-            route.append(matrix[y][go])
-        for go in range(y + 1, ny + 1):
-            route.append(matrix[go][nx])
-        for go in range(nx - 1, x - 1, -1):
-            route.append(matrix[ny][go])
-        for go in range(ny - 1, y, -1):
-            route.append(matrix[go][x])
-        route.appendleft(route.pop())
-        answer.append(min(route))
-        for go in range(x, nx + 1):
-            matrix[y][go] = route.popleft()
-        for go in range(y + 1, ny + 1):
-            matrix[go][nx] = route.popleft()
-        for go in range(nx - 1, x - 1, -1):
-            matrix[ny][go] = route.popleft()
-        for go in range(ny - 1, y, -1):
-            matrix[go][x] = route.popleft()
+    def move(y, x, yy, xx):
+        queue = deque()
+        for nx in range(x, xx + 1):
+            queue.append(matrix[y][nx])
+        for ny in range(y + 1, yy + 1):
+            queue.append(matrix[ny][xx])
+        for nx in range(xx - 1, x - 1, -1):
+            queue.append(matrix[yy][nx])
+        for ny in range(yy - 1, y, -1):
+            queue.append(matrix[ny][x])
+        answer.append(min(queue))
+        queue.appendleft(queue.pop())
 
-    for a, b, c, d in queries:
-        rotate(a - 1, b - 1, c - 1, d - 1)
+        for nx in range(x, xx + 1):
+            matrix[y][nx] = queue.popleft()
+        for ny in range(y + 1, yy + 1):
+            matrix[ny][xx] = queue.popleft()
+        for nx in range(xx - 1, x - 1, -1):
+            matrix[yy][nx] = queue.popleft()
+        for ny in range(yy - 1, y, -1):
+            matrix[ny][x] = queue.popleft()
+
+    for y, x, ny, nx in queries:
+        move(y, x, ny, nx)
     return answer
-
