@@ -19,7 +19,7 @@ double distance(const Point& p1, const Point& p2) {
 
 
 struct Edge {
-    int u, v; 
+    int u, v;
     double weight;
 
     bool operator<(const Edge& other) const {
@@ -58,7 +58,6 @@ void dfs(int node, const vector<vector<pair<int, double>>>& tree, vector<bool>& 
     visited[node] = true;
     tour.push_back(node);
 
- 
     for (const auto& neighbor : tree[node]) {
         int nextNode = neighbor.first;
         if (!visited[nextNode]) {
@@ -103,7 +102,7 @@ int main() {
 
 
     UnionFind uf(n);
-    vector<vector<pair<int, double>>> mstTree(n); 
+    vector<vector<pair<int, double>>> mstTree(n);
 
     for (const auto& edge : edges) {
         if (uf.unite(edge.u, edge.v)) {
