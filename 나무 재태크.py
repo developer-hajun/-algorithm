@@ -1,7 +1,6 @@
-import sys
+
 from collections import deque
 
-input = sys.stdin.readline
 n, m, k = map(int, input().split())
 food = [list(map(int, input().split())) for _ in range(n)]
 land = [[5] * n for _ in range(n)]
