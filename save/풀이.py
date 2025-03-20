@@ -1,51 +1,42 @@
-n = int(input())
-matrix = [[0]*n for _ in range(n)]
+def solution(info, edges):
+    graph = [[] for _ in range(len(info))]
+    for a, b in edges:
+        graph[a].append(b)
+    visit = [0] * len(info)
+    visit[0] = -1
+    for i in graph[0]:
+        visit[i] = 1
 
-arr = []
-for i in range(n**2):
-    a,b,c,d,e =map(int,input().split())
-    arr.append([a,[b,c,d,e]])
+    global answer
+    answer = -1
 
-def find(like):
-    findy,findx = -1,-1
-    max_like=0
-    max_zero =0
-    ff = []
-    for y in range(n):
-        for x in range(n):
-            if matrix[y][x] != 0:
-                continue
-            zero = 0
-            likes = 0
-            for ny,nx in [y,x-1],[y,x+1],[y+1,x],[y-1,x]:
-                if 0<=nx<n and 0<=ny<n:
-                    if matrix[ny][nx]==0:
-                        zero+=1
-                    elif matrix[ny][nx] in like:
-                        likes+=1
-            ff.append([likes,zero,y,x])
-    ff.sort(key=lambda x:(-x[0],-x[1],x[2],x[3]))
-    return ff[0][2],ff[0][3]
+    # : 이미 방문 0: 아직 방문 못함 1: 방문 가능
+    def dfs(sheep, wolf, go):
+        global answer
+        answer = max(answer, sheep)
+        for i in range(len(visit)):
+            if go[i] == 1:
+                if info[i] == 0:
+                    for _ in graph[i]:
+                        if go[_] == 0:
+                            go[_] = 1
+                    go[i] = -1
+                    dfs(sheep + 1, wolf, go)
+                    go[i] = 1
+                    for _ in graph[i]:
+                        if go[_] == 1:
+                            go[_] = 0
+                else:
+                    if sheep > wolf + 1:
+                        for _ in graph[i]:
+                            if go[_] == 0:
+                                go[_] = 1
+                        go[i] = -1
+                        dfs(sheep, wolf + 1, go)
+                        go[i] = 1
+                        for _ in graph[i]:
+                            if go[_] == 1:
+                                go[_] = 0
 
-
-for now,like in arr:
-    y,x= find(like)
-    matrix[y][x] = now
-arr.sort()
-
-
-answer = 0
-
-kk=[0,1,10,100,1000]
-for y in range(n):
-    for x in range(n):
-        finds = matrix[y][x]
-        like = arr[finds-1][1]
-        count = 0
-        for ny, nx in [y, x - 1], [y, x + 1], [y + 1, x], [y - 1, x]:
-            if 0 <= nx < n and 0 <= ny < n:
-                if matrix[ny][nx] in like:
-                    count+=1
-        answer += kk[count]
-print(answer)
-
+    dfs(1, 0, visit)
+    return answer
