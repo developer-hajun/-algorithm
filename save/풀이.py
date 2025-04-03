@@ -1,51 +1,13 @@
-n = int(input())
-matrix = [[0]*n for _ in range(n)]
-
-arr = []
-for i in range(n**2):
-    a,b,c,d,e =map(int,input().split())
-    arr.append([a,[b,c,d,e]])
-
-def find(like):
-    findy,findx = -1,-1
-    max_like=0
-    max_zero =0
-    ff = []
-    for y in range(n):
-        for x in range(n):
-            if matrix[y][x] != 0:
-                continue
-            zero = 0
-            likes = 0
-            for ny,nx in [y,x-1],[y,x+1],[y+1,x],[y-1,x]:
-                if 0<=nx<n and 0<=ny<n:
-                    if matrix[ny][nx]==0:
-                        zero+=1
-                    elif matrix[ny][nx] in like:
-                        likes+=1
-            ff.append([likes,zero,y,x])
-    ff.sort(key=lambda x:(-x[0],-x[1],x[2],x[3]))
-    return ff[0][2],ff[0][3]
+제어문     9번
+JAVA활용   2번,6번
 
 
-for now,like in arr:
-    y,x= find(like)
-    matrix[y][x] = now
-arr.sort()
+오늘 문제점 : 제발 시뮬레이션 돌리고 답 내자 제발
 
 
-answer = 0
 
-kk=[0,1,10,100,1000]
-for y in range(n):
-    for x in range(n):
-        finds = matrix[y][x]
-        like = arr[finds-1][1]
-        count = 0
-        for ny, nx in [y, x - 1], [y, x + 1], [y + 1, x], [y - 1, x]:
-            if 0 <= nx < n and 0 <= ny < n:
-                if matrix[ny][nx] in like:
-                    count+=1
-        answer += kk[count]
-print(answer)
-
+-푼거
+[2025년 대비] 이번에도 출제될 프로그래밍 - 제어문 14문제
+[2025년 대비] 두 번 시험보면 한 번은 출제되는 프로그래밍 - 포인터 5문제
+[2025년 대비] 항상 비슷한 유형으로 출제되는 프로그래밍 - 구조체 3문제
+[2025년 대비] 유형별로 분류한 프로그래밍 - JAVA활용 9문제
