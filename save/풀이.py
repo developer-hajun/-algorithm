@@ -1,51 +1,27 @@
-n = int(input())
-matrix = [[0]*n for _ in range(n)]
-
-arr = []
-for i in range(n**2):
-    a,b,c,d,e =map(int,input().split())
-    arr.append([a,[b,c,d,e]])
-
-def find(like):
-    findy,findx = -1,-1
-    max_like=0
-    max_zero =0
-    ff = []
-    for y in range(n):
-        for x in range(n):
-            if matrix[y][x] != 0:
-                continue
-            zero = 0
-            likes = 0
-            for ny,nx in [y,x-1],[y,x+1],[y+1,x],[y-1,x]:
-                if 0<=nx<n and 0<=ny<n:
-                    if matrix[ny][nx]==0:
-                        zero+=1
-                    elif matrix[ny][nx] in like:
-                        likes+=1
-            ff.append([likes,zero,y,x])
-    ff.sort(key=lambda x:(-x[0],-x[1],x[2],x[3]))
-    return ff[0][2],ff[0][3]
+from collections import deque
 
 
-for now,like in arr:
-    y,x= find(like)
-    matrix[y][x] = now
-arr.sort()
+def solution(land):
+    answer = 0
+    visit = [[0] * land[0] for _ in range(len(land))]
 
+    def sicu(wh):
+        queue = deque()
+        queue.append(wh)
+        count = 1
+        while queue:
+            y, x = queue.popleft()
+            for ny, nx in [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]:
+                if 0 <= ny < len(land) and 0 <= nx < len(land[0]) and not visit[ny][nx] and land[ny][nx] == 1:
+                    visit[ny][nx] = 1
+                    count += 1
+                    queue.append([ny, nx])
+        return count
 
-answer = 0
+    for x in range(len(land[0])):
+        for y in range(len(land)):
+            if land[y][x] == 1 and not visit[y][x]:
+                answer += sicu([y, x])
 
-kk=[0,1,10,100,1000]
-for y in range(n):
-    for x in range(n):
-        finds = matrix[y][x]
-        like = arr[finds-1][1]
-        count = 0
-        for ny, nx in [y, x - 1], [y, x + 1], [y + 1, x], [y - 1, x]:
-            if 0 <= nx < n and 0 <= ny < n:
-                if matrix[ny][nx] in like:
-                    count+=1
-        answer += kk[count]
-print(answer)
-
+    return answer
+solution([[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 0], [1, 0, 1, 0, 0, 1], [1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]])
