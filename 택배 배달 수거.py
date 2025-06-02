@@ -1,21 +1,27 @@
-def solution(cap, n, deliveries, pickups):
-    answer = 0
-    while deliveries and not deliveries[-1]: deliveries.pop()
-    while pickups and not pickups[-1]: pickups.pop()
-    while deliveries or pickups:
-        move = max(len(deliveries), len(pickups))
+from itertools import permutations, combinations_with_replacement, product
 
-        m = cap
-        while deliveries and deliveries[-1] <= m:
-            m -= deliveries[-1]
-            deliveries.pop()
-        if deliveries:
-            deliveries[-1] -= m
-        m = cap
-        while pickups and pickups[-1] <= m:
-            m -= pickups[-1]
-            pickups.pop()
-        if pickups:
-            pickups[-1] -= m
-        answer += move * 2
+
+def solution(users, emoticons):
+    answer = [-1, -1]
+    for percent in product([10, 20, 30, 40], repeat=len(emoticons)):
+        emoticon = [int(emoticons[i] - (emoticons[i] * percent[i] / 100)) for i in range(len(emoticons))]
+
+        now = [0, 0]
+        for per, money in users:
+            use_money = 0
+            for case in range(len(emoticon)):
+                if percent[case] >= per:
+                    use_money += emoticon[case]
+            if use_money >= money:
+                now[0] += 1
+            else:
+                now[1] += use_money
+
+        if answer[0] < now[0]:
+            answer = now
+        elif answer[0] == now[0] and answer[1] < now[1]:
+            answer = now
     return answer
+
+
+
