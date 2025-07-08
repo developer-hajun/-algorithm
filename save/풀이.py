@@ -1,31 +1,28 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10**6)
 
-def solution(rectangle, characterX, characterY, itemX, itemY):
-    board = [[0]*102 for _ in range(102)]
+def solution(n, lighthouse):
+    graph = [[] for _ in range(n)]
+    for a, b in lighthouse:
+        a -= 1
+        b -= 1
+        graph[a].append(b)
+        graph[b].append(a)
 
-    for a, b, c, d in rectangle:
-        a *= 2; b *= 2; c *= 2; d *= 2
-        for y in range(b, d+1):
-            for x in range(a, c+1):
-                board[y][x] = 1
+    dp = [[0, 0] for _ in range(n)] 
+    visited = [False] * n
 
-    for a, b, c, d in rectangle:
-        a *= 2; b *= 2; c *= 2; d *= 2
-        for y in range(b+1, d):
-            for x in range(a+1, c):
-                board[y][x] = 0
-
-    q = deque()
-    q.append((characterY*2, characterX*2, 0))
-    board[characterY*2][characterX*2] = 3
-
-    while q:
-        y, x, dist = q.popleft()
-        if (y, x) == (itemY*2, itemX*2):
-            return dist // 2 
-
-        for dy, dx in [(-1,0),(1,0),(0,-1),(0,1)]:
-            ny, nx = y + dy, x + dx
-            if 0 <= ny < 102 and 0 <= nx < 102 and board[ny][nx] == 1:
-                board[ny][nx] = 3
-                q.append((ny, nx, dist+1))
+    def dfs(node):
+        visited[node] = True
+        dp[node][0] = 0
+        dp[node][1] = 1
+        for neighbor in graph[node]:
+            if not visited[neighbor]:
+                dfs(neighbor)
+                dp[node][0] += dp[neighbor][1]  
+                dp[node][1] += min(dp[neighbor]) 
+    dfs(0)
+    for _ in dp:
+        print(_)
+    return min(dp[0]) 
+solution(8	,[[1, 2], [1, 3], [1, 4], [1, 5], [5, 6], [5, 7], [5, 8]])
