@@ -2,7 +2,6 @@ package input_train;
 
 import java.util.*;
 
-
 class FireBall{
 	int r,c,m,s,d,which;
 	public FireBall(int q,int w, int e,int r,int t) {
