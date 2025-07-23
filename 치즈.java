@@ -65,10 +65,14 @@ public class Main {
         for (int i = 1; i <= N; i++) {
             for (int j = 1; j <= M; j++) {
                 if (map[i][j] == 1) {
+                    int c = 0;
                     for (int d = 0; d < 4; d++) {
                         int ny = i + dy[d];
                         int nx = j + dx[d];
                         if (map[ny][nx] == 2) {
+                            c++;
+                        }
+                        if(c>1){
                             map[i][j]=0;
                             cheeseCount--;
                             break;
