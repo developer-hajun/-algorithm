@@ -1,0 +1,62 @@
+import java.util.*;
+import java.io.*;
+public class Main {
+    static final int INF = 987654321;
+ 
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+ 
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+ 
+        int[][] arr = new int[N + 1][N + 1];
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                if (i != j) {
+                    arr[i][j] = INF;
+                }
+            }
+        }
+ 
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+ 
+            arr[u][v] = 0; 
+ 
+  
+            arr[v][u] = (b == 0) ? 1 : 0;
+        }
+ 
+        for (int k = 1; k <= N; k++) {
+            for (int i = 1; i <= N; i++) {
+                for (int j = 1; j <= N; j++) {
+                    if (i == j) {
+                        continue;
+                    }
+ 
+                    if (arr[i][j] > arr[i][k] + arr[k][j]) {
+                        arr[i][j] = arr[i][k] + arr[k][j];
+                    }
+                }
+            }
+        }
+ 
+        int K = Integer.parseInt(br.readLine());
+ 
+        StringBuilder sb = new StringBuilder();
+        while (K-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            int s = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+ 
+            sb.append(arr[s][e] + "\n");
+        }
+
+        System.out.println(sb.toString());
+    }
+ 
+}
