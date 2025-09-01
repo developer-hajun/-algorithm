@@ -1,46 +1,51 @@
 import java.util.*;
 import java.io.*;
 
-class Main {
-    static int[][] matrix;
-
-    static int white=0;
-    static int blue=0;
-
-    public static int solve(int start_x,int end_x,int start_y,int end_y){
-        if(start_x==end_x&&start_y==end_y) return matrix[start_y][start_x];
-        int mid_x = (start_x+end_x)/2;
-        int mid_y = (start_y+end_y)/2;
-        int[] value = new int[4];
-        value[0]=solve(start_x,mid_x,start_y,mid_y);
-        value[1]=solve(mid_x+1,end_x,start_y,mid_y);
-        value[2]=solve(start_x,mid_x,mid_y+1,end_y);
-        value[3]=solve(mid_x+1,end_x,mid_y+1,end_y);
-        if (value[0] == value[1] && value[1] == value[2] && value[2] == value[3]) return value[0];
-        else{
-            for(int i:value){
-                if(i==0) white++;
-                else if(i==1) blue++;
-            }
-        }
-        return -1;
-    }
-    public static void main(String[] args) throws Exception {
+public class Main {
+	static int[] answer= new int[2];
+	
+	public static int pick(int start_y,int start_x,int size) {
+		if(size==1) return map[start_y][start_x];
+		int s = size/2;
+		
+		int[] next = new int[4];
+		int num=0;
+		for(int i=0;i<2;i++) {
+			for(int j=0;j<2;j++) {
+				next[num]= pick(start_y+s*i,start_x+s*j,s);
+				num++;
+			}
+		}
+		for(int i=1;i<4;i++) {
+			if(next[i]!=next[i-1]) {
+				for(int e=0;e<4;e++) {
+					if(next[e]==-2) continue;
+					answer[next[e]]++;
+				}
+				return -2;
+			}
+		}
+		
+		return next[0];
+	}
+	static int[][] map;
+	public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
-        matrix = new int[n][n];
-        for(int i=0;i<n;i++){
-            st = new StringTokenizer(br.readLine());
-            for(int j=0;j<n;j++){
-                matrix[i][j] = Integer.parseInt(st.nextToken());
-            }
+        map = new int[n][n];
+        for(int i=0;i<n;i++) {
+        	st = new StringTokenizer(br.readLine());
+        	for(int j=0;j<n;j++) {
+        		map[i][j] = Integer.parseInt(st.nextToken());
+        	}
         }
-        int answer = solve(0,n-1,0,n-1);
-        if(answer==0) white++;
-        else if(answer==1) blue++;
-        System.out.println(white);
-        System.out.println(blue);  
-    
+        int a = pick(0,0,n);
+        if(a!=-2) {
+        	answer[a]++;
+        }
+        System.out.println(answer[0]);
+        System.out.println(answer[1]);
+        
     }
 }
