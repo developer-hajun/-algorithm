@@ -1,49 +1,49 @@
 import java.util.*;
 import java.io.*;
 
-class Main {
-    static int[][] matrix;
+public class Main {
 
-    public static String solve(int start_x, int end_x, int start_y, int end_y) {
-        if (start_x == end_x && start_y == end_y) {
-            return String.valueOf(matrix[start_y][start_x]);
-        }
-
-        int mid_x = (start_x + end_x) / 2;
-        int mid_y = (start_y + end_y) / 2;
-
-        String[] value = new String[4];
-        value[0] = solve(start_x, mid_x, start_y, mid_y);    
-        value[1] = solve(mid_x + 1, end_x, start_y, mid_y);     
-        value[2] = solve(start_x, mid_x, mid_y + 1, end_y);    
-        value[3] = solve(mid_x + 1, end_x, mid_y + 1, end_y);   
-
-        if (value[0].equals(value[1]) && value[1].equals(value[2]) && value[2].equals(value[3])
-            && value[0].length() == 1) {
-            return value[0];
-        } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append('(');
-            for (String v : value) {
-                sb.append(v);
-            }
-            sb.append(')');
-            return sb.toString();
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+	
+	public static String pick(int start_y,int start_x,int size) {
+		if(size==1) return String.valueOf(map[start_y][start_x]);
+		int s = size/2;
+		
+		String[] next = new String[4];
+		int num=0;
+		for(int i=0;i<2;i++) {
+			for(int j=0;j<2;j++) {
+				next[num]= pick(start_y+s*i,start_x+s*j,s);
+				num++;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for(int i=1;i<4;i++) {
+			if(!next[i].equals(next[i-1])||next[i].length()!=1) {
+				sb.append('(');
+				for(int e=0;e<4;e++) {
+					sb.append(next[e]);
+				}
+				sb.append(')');
+				return sb.toString();
+			}
+		}
+		
+		return next[0];
+	}
+	static char[][] map;
+	public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        matrix = new int[n][n];
-
-        for (int i = 0; i < n; i++) {
-            String now = br.readLine();
-            for (int j = 0; j < n; j++) {
-                matrix[i][j] = now.charAt(j) - '0';
-            }
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        map = new char[n][n];
+        for(int i=0;i<n;i++) {
+        	String e =  br.readLine();
+        	for(int j=0;j<n;j++) {
+        		map[i][j] = e.charAt(j);
+        	}
         }
-
-        System.out.print(solve(0, n - 1, 0, n - 1));
+        String a = pick(0,0,n);
+        System.out.print(a);
+        
     }
 }
