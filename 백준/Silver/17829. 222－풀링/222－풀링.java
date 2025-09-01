@@ -1,32 +1,38 @@
 import java.util.*;
 import java.io.*;
 
-class Main {
-    static int[][] matrix;
-
-    public static int solve(int start_x,int end_x,int start_y,int end_y){
-        if(start_x==end_x&&start_y==end_y) return matrix[start_y][start_x];
-        int mid_x = (start_x+end_x)/2;
-        int mid_y = (start_y+end_y)/2;
-        int[] value = new int[4];
-        value[0]=solve(start_x,mid_x,start_y,mid_y);
-        value[1]=solve(mid_x+1,end_x,start_y,mid_y);
-        value[2]=solve(start_x,mid_x,mid_y+1,end_y);
-        value[3]=solve(mid_x+1,end_x,mid_y+1,end_y);
-        Arrays.sort(value);
-        return value[2];
-    }
-    public static void main(String[] args) throws Exception {
+public class Main {
+	
+	public static int pick(int start_y,int start_x,int size) {
+		if(size==1) return map[start_y][start_x];
+		int s = size/2;
+		
+		int[] next = new int[4];
+		int num=0;
+		for(int i=0;i<2;i++) {
+			for(int j=0;j<2;j++) {
+				next[num]= pick(start_y+s*i,start_x+s*j,s);
+				num++;
+			}
+		}
+		Arrays.sort(next);
+		
+		return next[2];
+	}
+	static int[][] map;
+	public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
-        matrix = new int[n][n];
-        for(int i=0;i<n;i++){
-            st = new StringTokenizer(br.readLine());
-            for(int j=0;j<n;j++){
-                matrix[i][j] = Integer.parseInt(st.nextToken());
-            }
+        map = new int[n][n];
+        for(int i=0;i<n;i++) {
+        	st = new StringTokenizer(br.readLine());
+        	for(int j=0;j<n;j++) {
+        		map[i][j] = Integer.parseInt(st.nextToken());
+        	}
         }
-        System.out.println(solve(0,n-1,0,n-1));
+        int size = (int)Math.pow(n, 2);
+        System.out.print(pick(0,0,n));
+        
     }
 }
