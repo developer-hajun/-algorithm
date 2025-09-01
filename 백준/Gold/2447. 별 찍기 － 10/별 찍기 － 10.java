@@ -1,37 +1,42 @@
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 
+public class Main {
 
-class Main {
-    static char[][] map;
-
-    public static void dfs(int start_x, int end_x, int start_y, int end_y) {
-        if (start_x == end_x && start_y == end_y) {
-            map[start_x][start_y] = '*';
-            return;
-        }
-        int len = (end_x - start_x + 1) / 3; 
-
+	static char[][] map;
+	public static void pick(int start_y,int start_x,int size) {
+		if(size==1) {
+			map[start_y][start_x] = '*';
+			return;
+		}
+		int rsize = size/3;
+		
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
+				int ry = start_y+rsize*i;
+				int rx = start_x+rsize*j;
+				if(i==1&&j==1) continue;
+				pick(ry,rx,rsize);
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
         
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (i == 1 && j == 1) continue;
-                dfs(start_x + i * len, start_x + (i + 1) * len - 1,
-                    start_y + j * len, start_y + (j + 1) * len - 1);
-            }
-        }
-    }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        map= new char[n][n];
+        int n = Integer.parseInt(st.nextToken());
+        map = new char[n][n];
         for(int i=0;i<n;i++) Arrays.fill(map[i],' ');
-
-        dfs(0,n-1,0,n-1);
+        
+        pick(0,0,n);
         StringBuilder sb = new StringBuilder();
-        for(int i=0;i<n;i++) sb.append(new String(map[i])).append("\n");
-        System.out.println(sb);
+        for(int i=0;i<n;i++){
+        	for(int j=0;j<n;j++) {
+        		sb.append(map[i][j]);
+        	}
+        	sb.append("\n");
+        }
+        System.out.print(sb);
     }
 }
-
