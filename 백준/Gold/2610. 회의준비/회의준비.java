@@ -1,74 +1,82 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int M = sc.nextInt();
+    static int[] parents;
+
+    public static int find(int x){
+        if(parents[x] != x) parents[x] = find(parents[x]);
+        return parents[x];
+    }
+
+    public static void union(int a, int b){
+        int pa = find(a);
+        int pb = find(b);
+        if(pa != pb){
+            if(pa < pb) parents[pb] = pa;
+            else parents[pa] = pb;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = null;
+        int N = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
 
         ArrayList<Integer>[] graph = new ArrayList[N+1];
-        for(int i=1;i<=N;i++) graph[i]=new ArrayList<>();
+        for(int i=1; i<=N; i++) graph[i] = new ArrayList<>();
+        parents = new int[N+1];
+        for(int i=1; i<=N; i++) parents[i] = i;
 
-        for(int i=0;i<M;i++){
-            int u = sc.nextInt();
-            int v = sc.nextInt();
+        for(int i=0; i<M; i++){
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
             graph[u].add(v);
             graph[v].add(u);
+            union(u,v);
         }
 
-        boolean[] visited = new boolean[N+1];
+        HashMap<Integer, ArrayList<Integer>> components = new HashMap<>();
+        for(int i=1; i<=N; i++){
+            int root = find(i);
+            components.putIfAbsent(root, new ArrayList<>());
+            components.get(root).add(i);
+        }
+
         ArrayList<Integer> leaders = new ArrayList<>();
 
-        for(int i=1;i<=N;i++){
-            if(!visited[i]){
-                Queue<Integer> q = new ArrayDeque<>();
-                q.add(i);
-                visited[i]=true;
+        for(ArrayList<Integer> committee : components.values()){
+            int leader = -1;
+            int minMaxDist = Integer.MAX_VALUE;
 
-                ArrayList<Integer> committee = new ArrayList<>();
-                committee.add(i);
+            for(int candidate : committee){
+                Queue<Integer> q = new ArrayDeque<>();
+                int[] dist = new int[N+1];
+                boolean[] visited = new boolean[N+1];
+                q.add(candidate);
+                visited[candidate] = true;
+                int maxDist = 0;
 
                 while(!q.isEmpty()){
                     int node = q.poll();
                     for(int nxt : graph[node]){
                         if(!visited[nxt]){
-                            visited[nxt]=true;
+                            visited[nxt] = true;
+                            dist[nxt] = dist[node] + 1;
+                            maxDist = Math.max(maxDist, dist[nxt]);
                             q.add(nxt);
-                            committee.add(nxt);
                         }
                     }
                 }
 
-                int leader = -1;
-                int minMaxDist = Integer.MAX_VALUE;
-                for(int candidate : committee){
-                    Queue<Integer> bfs = new ArrayDeque<>();
-                    int[] dist = new int[N+1];
-                    boolean[] vis = new boolean[N+1];
-                    bfs.add(candidate);
-                    vis[candidate]=true;
-                    dist[candidate]=0;
-                    int maxDist = 0;
-
-                    while(!bfs.isEmpty()){
-                        int node = bfs.poll();
-                        for(int nxt : graph[node]){
-                            if(!vis[nxt] && committee.contains(nxt)){
-                                vis[nxt]=true;
-                                dist[nxt]=dist[node]+1;
-                                maxDist = Math.max(maxDist, dist[nxt]);
-                                bfs.add(nxt);
-                            }
-                        }
-                    }
-
-                    if(maxDist < minMaxDist){
-                        minMaxDist = maxDist;
-                        leader = candidate;
-                    }
+                if(maxDist < minMaxDist){
+                    minMaxDist = maxDist;
+                    leader = candidate;
                 }
-                leaders.add(leader);
             }
+            leaders.add(leader);
         }
 
         Collections.sort(leaders);
