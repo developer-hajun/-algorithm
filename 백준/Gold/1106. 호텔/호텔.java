@@ -8,7 +8,7 @@ class Main {
 
         int c = Integer.parseInt(st.nextToken());
         int n = Integer.parseInt(st.nextToken());
-        int[] dp = new int[2001];
+        int[] dp = new int[1111];
         int INF = Integer.MAX_VALUE / 2;
         Arrays.fill(dp, INF);
         dp[0] = 0;
@@ -18,13 +18,13 @@ class Main {
             int money = Integer.parseInt(st.nextToken());
             int human = Integer.parseInt(st.nextToken());
 
-            for (int j = human; j <= 2000; j++) {
+            for (int j = human; j <= 1110; j++) {
                 dp[j] = Math.min(dp[j], dp[j - human] + money);
             }
         }
 
         int answer = INF;
-        for (int i = c; i <= 2000; i++) {
+        for (int i = c; i <= 1110; i++) {
             answer = Math.min(answer, dp[i]);
         }
 
