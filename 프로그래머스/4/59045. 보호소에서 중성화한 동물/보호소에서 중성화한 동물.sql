@@ -1,0 +1,2 @@
+with a as (select ANIMAL_ID from ANIMAL_INS where SEX_UPON_INTAKE like "Intact%" )
+SELECT ANIMAL_ID,ANIMAL_TYPE,NAME from ANIMAL_OUTS where ANIMAL_ID in (select * from a) and SEX_UPON_OUTCOME not like "Intact%"
