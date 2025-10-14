@@ -14,6 +14,7 @@ class UserSolution {
             status = 0;
         }
     }
+	
     
     static TreeSet<robot> minSet;
     static TreeSet<robot> maxSet;
