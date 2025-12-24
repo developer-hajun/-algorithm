@@ -1,79 +1,71 @@
-import java.io.*;
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        
+class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+    public static void main(String[] args) throws Exception{
+        st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
-        
+
         st = new StringTokenizer(br.readLine());
-        int start = Integer.parseInt(st.nextToken());
-        int end = Integer.parseInt(st.nextToken());
-        
-        List<int[]>[] graph = new ArrayList[n+1];
-        for (int i = 0; i <= n; i++) graph[i] = new ArrayList<>();
-        
-        for (int i = 0; i < m; i++) {
+        int s = Integer.parseInt(st.nextToken())-1;
+        int d = Integer.parseInt(st.nextToken())-1;
+
+        List<int[]>[] edge = new ArrayList[n];
+        for(int i=0;i<n;i++) edge[i] = new ArrayList<>();
+
+        for(int i=0;i<m;i++){
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
+            int a = Integer.parseInt(st.nextToken())-1;
+            int b = Integer.parseInt(st.nextToken())-1;
             int w = Integer.parseInt(st.nextToken());
-            graph[a].add(new int[]{b, w});
-            graph[b].add(new int[]{a, w});
+            edge[a].add(new int[]{b,w});
+            edge[b].add(new int[]{a,w});
         }
 
-        int[] tax = new int[k+1];
-        for (int i = 1; i <= k; i++) {
-            tax[i] = Integer.parseInt(br.readLine());
+        int[] up = new int[k+1];
+        up[1] =  Integer.parseInt(br.readLine());
+        for(int i=2;i<=k;i++){
+            up[i]= up[i-1]+ Integer.parseInt(br.readLine());
         }
 
-        int INF = Integer.MAX_VALUE / 2;
-        int[][] dist = new int[n][n+1];
-        for (int i = 0; i < n; i++) Arrays.fill(dist[i], INF);
-        dist[0][start] = 0;
 
-        PriorityQueue<int[]> queue = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
-        queue.add(new int[]{start, 0, 0}); 
-
-        while (!queue.isEmpty()) {
+        int[][] dist = new int[n][n];
+        for(int i=0;i<n;i++){
+            Arrays.fill(dist[i],Integer.MAX_VALUE/2);
+        }
+        PriorityQueue<int[]> queue = new PriorityQueue<>((o1,o2)->{return o1[1]-o2[1];});
+        queue.add(new int[]{s,0,0});//현재위치,현재 값,현재 이동횟수
+        dist[0][s]=0;
+        while(!queue.isEmpty()){
             int[] now = queue.poll();
-            int node = now[0], d = now[1], used = now[2];
-            if (dist[used][node] < d) continue;
-
-            for (int[] edge : graph[node]) {
-                int next = edge[0];
-                int nd = d + edge[1];
-                int nu = used + 1;
-                if (nu < n && nd < dist[nu][next]) {
-                    dist[nu][next] = nd;
-                    queue.add(new int[]{next, nd, nu});
-                }
+            int w = now[0];
+            int val = now[1];
+            int count = now[2];
+            if (dist[count][w] < val) continue;
+            if(count==n-1) continue;
+            for(int[] next : edge[w]){
+                int nw = next[0];
+                int nval = next[1]+val;
+                int ncount= count+1;
+                if(dist[ncount][nw]<=nval) continue;
+                dist[ncount][nw] = nval;
+                queue.add(new int[]{nw,nval,ncount});
             }
         }
 
-        int[] prefix = new int[k+1];
-        for (int i = 1; i <= k; i++) {
-            prefix[i] = prefix[i-1] + tax[i];
-        }
-
-        System.out.println(getMin(dist, end, 0));
-        for (int i = 1; i <= k; i++) {
-            System.out.println(getMin(dist, end, prefix[i]));
-        }
-    }
-
-    static int getMin(int[][] dist, int end, int tax) {
-        int ans = Integer.MAX_VALUE;
-        for (int len = 0; len < dist.length; len++) {
-            if (dist[len][end] < Integer.MAX_VALUE / 2) {
-                ans = Math.min(ans, dist[len][end] + len * tax);
+        for(int i=0;i<=k;i++){
+            int answer = Integer.MAX_VALUE;
+            for(int j=0;j<n;j++){
+                int val = dist[j][d]+up[i]*j;
+                answer = Math.min(answer,val);
             }
+            System.out.println(answer);
         }
-        return ans;
     }
 }
