@@ -1,63 +1,41 @@
 import java.util.*;
-
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        HashMap<String,TreeMap<Integer,TreeSet<Integer>>> map = new HashMap<>();
-        HashMap<String,Integer> genre = new HashMap<>();
-        List<Integer> answer = new ArrayList<>();
-        
-        
-        for(int i=0;i<genres.length;i++){
-            String g = genres[i];
-            int p = plays[i];
-            
-            if(!genre.containsKey(g)) genre.put(g,p);
-            else genre.put(g,genre.get(g)+p);
-            
-            if(!map.containsKey(g)) map.put(g,new TreeMap<>((o1,o2)->{
-            return o2-o1;
-        }));
-            
-            
-            TreeMap<Integer,TreeSet<Integer>> nowMap = map.get(g);
-            
-            if(!nowMap.containsKey(p)) nowMap.put(p,new TreeSet<>());
-            
-            TreeSet<Integer> play = nowMap.get(p);
-            
-            play.add(i);
+        Map<String, Integer> total = new HashMap<>();
+        Map<String , TreeMap<Integer,TreeSet<Integer>>> answer = new HashMap<>(); 
+        for (int i = 0; i < genres.length; i++){
+            if(!total.containsKey(genres[i])){
+                total.put(genres[i],0);
+                answer.put(genres[i],new TreeMap<>((o1,o2)->{return o2-o1;}));
+            }
+            total.put(genres[i],total.get(genres[i])+plays[i]);
+            TreeMap<Integer,TreeSet<Integer>> now = answer.get(genres[i]);
+            if(!now.containsKey(plays[i])) now.put(plays[i],new TreeSet<>((o1,o2)->{return o1-o2;}));
+            now.get(plays[i]).add(i);
         }
+        TreeMap<Integer,String> e = new TreeMap<>((o1,o2)->{return o2-o1;});
+        for(Map.Entry<String,Integer> d : total.entrySet()){
+            e.put(d.getValue(),d.getKey());
+        }
+        List<Integer> ans = new ArrayList<>();
         
-        TreeMap<Integer,String> go = new TreeMap<>((o1,o2)->{
-            return o2-o1;
-        });
-        for(String e : genre.keySet()) go.put(genre.get(e),e);
-        
-        for(int count : go.keySet()){
-            
-            String now = go.get(count);
-            
-            TreeMap<Integer,TreeSet<Integer>> nowMap = map.get(now);
-            
-            int counts = 0;
-            
-            A: for(int play : nowMap.keySet()){
-                for(int number: nowMap.get(play) ){
-                    answer.add(number);
-                    counts++;
-                    if(counts>=2) break A;
+        for(Map.Entry<Integer,String> d : e.entrySet()){
+            int count=0;
+            A:for(Map.Entry<Integer,TreeSet<Integer>> d1 : answer.get(d.getValue()).entrySet()){
+                for(int d2 : d1.getValue()){
+                    count++;
+                    ans.add(d2);
+                    if(count==2) break A;
                 }
             }
-            
         }
-        int[] ans = new int[answer.size()];
-        for(int i=0;i<answer.size();i++){
-            ans[i] = answer.get(i);
-        }
+        int[] answer2= new int[ans.size()];
+        for(int i=0;i<ans.size();i++){
+            answer2[i] = ans.get(i);
+        } 
         
+        return answer2;
+    
         
-        return ans;
     }
 }
-
-//속한 노래가 많이 재생 장르 -> 장르내 많이 재생된 노래 ->  고유번호 낮은순
