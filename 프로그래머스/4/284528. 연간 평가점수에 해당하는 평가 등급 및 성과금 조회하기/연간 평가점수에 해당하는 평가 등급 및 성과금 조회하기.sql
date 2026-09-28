@@ -1,28 +1,29 @@
-with grade as (
-    select
-        EMP_NO,
-        case
-            when AVG(SCORE)>=96 then 'S'
-            when AVG(SCORE)>=90 then 'A'
-            when AVG(SCORE)>=80 then 'B'
-            else 'C'
-        end as GRADE,
-        case
-            when AVG(SCORE)>=96 then 0.2
-            when AVG(SCORE)>=90 then 0.15
-            when AVG(SCORE)>=80 then 0.1
-            else 0
-        end as percent
-    from HR_GRADE
-    group by EMP_NO
+with a as (
+    select 
+        e.EMP_NO,
+        e.EMP_NAME,
+        avg(g.SCORE) as AVG_SCORE,
+        e.SAL
+    from HR_DEPARTMENT d
+    join HR_EMPLOYEES e on d.DEPT_ID = e.DEPT_ID
+    join HR_GRADE g on e.EMP_NO = g.EMP_NO
+    group by e.EMP_NO, e.EMP_NAME, e.SAL
 )
-select 
-    a.EMP_NO as EMP_NO,
-    a.EMP_NAME as EMP_NAME,
-    b.GRADE as GRADE,
-    a.SAL*b.percent as BONUS
 
-from HR_EMPLOYEES a 
-inner join grade b 
-on a.EMP_NO=b.EMP_NO
-order by EMP_NO
+select
+    EMP_NO,
+    EMP_NAME,
+    case
+        when AVG_SCORE >= 96 then 'S'
+        when AVG_SCORE >= 90 then 'A'
+        when AVG_SCORE >= 80 then 'B'
+        else 'C'
+    end as GRADE,
+    SAL * case
+        when AVG_SCORE >= 96 then 0.20
+        when AVG_SCORE >= 90 then 0.15
+        when AVG_SCORE >= 80 then 0.10
+        else 0
+    end as BONUS
+from a
+order by EMP_NO;
