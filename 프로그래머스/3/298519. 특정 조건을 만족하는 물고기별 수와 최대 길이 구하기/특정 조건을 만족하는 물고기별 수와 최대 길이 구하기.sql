@@ -1,16 +1,18 @@
-with b as (select 
-            count(*) as FISH_COUNT,
-            AVG(
-            case
-                when LENGTH<=10 then 10
-                else LENGTH
-            end
-            ) AS AVG_LENGTH, 
-            MAX(LENGTH) AS MAX_LENGTH,
-            FISH_TYPE
-           from 
-            FISH_INFO 
-           group by 
-            FISH_TYPE)
-
-select FISH_COUNT,MAX_LENGTH,FISH_TYPE from b where  AVG_LENGTH>=33 ORDER BY FISH_TYPE ASC
+WITH A AS (
+    SELECT 
+        ID,
+        FISH_TYPE,
+        CASE
+            WHEN LENGTH < 10 or length is null THEN 10
+            ELSE LENGTH
+        END AS LENGTH
+    FROM FISH_INFO
+)
+SELECT 
+    COUNT(ID) AS FISH_COUNT,
+    MAX(LENGTH) AS MAX_LENGTH,
+    FISH_TYPE
+FROM A
+GROUP BY FISH_TYPE
+HAVING AVG(LENGTH) >= 33
+ORDER BY FISH_TYPE;
